@@ -2586,6 +2586,7 @@ react-circular-progressbar@^2.1.0:
 
 react-cookie@^4.1.1:
   version "4.1.1"
+  resolved "https://registry.npmjs.org/react-cookie/-/react-cookie-4.1.1.tgz"
   integrity sha512-ffn7Y7G4bXiFbnE+dKhHhbP+b8I34mH9jqnm8Llhj89zF4nPxPutxHT1suUqMeCEhLDBI7InYwf1tpaSoK5w8A==
   dependencies:
     "@types/hoist-non-react-statics" "^3.0.1"

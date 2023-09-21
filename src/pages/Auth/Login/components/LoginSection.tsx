@@ -7,18 +7,41 @@ import * as Yup from 'yup'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import LoginRegisterPasswordInput from "pages/Auth/components/LoginRegisterPasswordInput";
 import axios from "axios";
+import { useCookies } from 'react-cookie';
 
 const LoginSchema = Yup.object().shape({
     email: Yup.string().required("Email is required").matches(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, "Please enter the valid email"),
     password: Yup.string().required("Password is required").min(8, "Password length must be minimum 8 characters ").max(50)
 })
 
-const handleLogin = async (userData: object) => {
+const handleLogin = async (userData: object, setCookie: any) => {
     const API_LOGIN_URL = "https://qssanalyticstalentscore.pythonanywhere.com/user/login/"
 
+
     try {
-        const response = await axios.post(API_LOGIN_URL, userData)
+        // const response = await axios.post(API_LOGIN_URL, userData, { withCredentials: true })
+        // console.log("Login Succesfully", response);
+        // setCookie('csrftoken', response.headers['x-csrftoken'], { path: '/' });
+        const response = await fetch(API_LOGIN_URL, {
+            'method': 'POST',
+            'body': JSON.stringify(userData),
+            'credentials': 'include',
+            'mode': 'cors',
+            'headers': {
+                'accept': 'application/json, text/plain, */*', 'content-type': 'application/json'
+            }
+        })
+        
+        
+
         console.log("Login Succesfully", response);
+
+
+        // await axios.post(API_LOGIN_URL, userData,
+        //     { headers: { 'Content-Type': 'application/json' }, withCredentials: true })
+        // console.log("Login Succesfully", response);
+
+
 
     } catch (error) {
         console.log(error);
@@ -28,6 +51,7 @@ const handleLogin = async (userData: object) => {
 export type IloginFormValues = Yup.InferType<typeof LoginSchema>;
 
 const LoginSection = () => {
+    const [cookies, setCookie] = useCookies(['csrftoken']);
     const { register, handleSubmit, watch, trigger, formState: { errors } } = useForm<IloginFormValues>({
         resolver: yupResolver(LoginSchema),
         defaultValues: {
@@ -41,7 +65,7 @@ const LoginSection = () => {
             password: data.password
         }
 
-        handleLogin(sendedData)
+        handleLogin(sendedData, setCookie)
     };
     return (
         <div className="px-20 py-16 bg-white w-6/12 flex flex-col gap-14 ">
