@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { ReactComponent as Logo } from 'assets/logo-second.svg';
 import { Bars3Icon } from '@heroicons/react/24/outline';
 import { useState } from 'react';
+import useAuth from 'hooks/useAuth';
 
 export interface IWebMenu {
 	links: { text: string; path: string }[];
@@ -23,7 +24,8 @@ export const WebMenu = ({ links }: IWebMenu) => {
 };
 
 const NavBar = () => {
-	const [isLogin, setIsLogin] = useState(true)
+	const { user, setUser } = useAuth()
+
 	const links = [
 		{
 			text: 'Home',
@@ -56,7 +58,7 @@ const NavBar = () => {
 						<WebMenu links={links} />
 					</nav>
 				</div>
-				{!isLogin &&
+				{!user &&
 					<div className="flex gap-6 text items-center">
 						<Link to={'/login'} className="group overflow-hidden hover:text-qss-secondary">
 							Sign in
@@ -68,9 +70,9 @@ const NavBar = () => {
 					</div>
 				}
 				{
-					isLogin &&
+					user &&
 					<Link to={'/profile'} className="bg-qss-secondary text-white rounded-3xl px-10 py-2">
-							ZH
+							{user.first_name[0]}{user.last_name[0]}
 						</Link>
 				}
 			</div>
