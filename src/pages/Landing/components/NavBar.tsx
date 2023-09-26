@@ -23,7 +23,7 @@ export const WebMenu = ({ links }: IWebMenu) => {
 };
 
 const NavBar = () => {
-	const [isLogin, setIsLogin] = useState(false)
+	const [isLogin, setIsLogin] = useState(true)
 	const links = [
 		{
 			text: 'Home',

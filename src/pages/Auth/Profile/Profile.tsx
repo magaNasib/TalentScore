@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Footer from './../../Landing/components/Footer'
 import NavBar from './../../Landing/components/NavBar'
 import Document from './components/Document'
@@ -9,26 +9,67 @@ import cv1 from './../../../assets/profileCV1.png'
 import cv2 from './../../../assets/profileCV2.png'
 import career from './../../../assets/profileCareer.png'
 import certificate from './../../../assets/profileCertificate.png'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useGetStageQuery } from "services/stage";
+import axios from 'axios'
+import { axiosPrivateInstance } from 'axioss'
+import useAuth from 'hooks/useAuth'
+import useAxiosPrivate from 'hooks/useAxiosPrivate'
+import useLogout from 'hooks/useLogout'
 
 
 
 interface DataItem {
     type: string
     url: string
-path:string
+    path: string
 }
 
 const Profile: React.FC = () => {
+
+    const { user, setUser } = useAuth()
+
+    const axiosPrivateInstance = useAxiosPrivate()
+    const navigate = useNavigate()
+    const logout = useLogout()
+    const [loading, setLoading] = useState(false)
+
+
+
+    useEffect(() => {
+        async function getUser() {
+            const { data } = await axiosPrivateInstance.get('user/user/')
+            setUser(data)
+        }
+
+        getUser()
+    }, [])
+
+
+
+
+    async function onLogout() {
+        setLoading(true)
+
+        await logout()
+        navigate('/')
+    }
+
+    // (async () => {
+    //     const { data } = await axiosPrivateInstance.post("user/refresh-token/");
+    //     console.log(data);
+    //     return data;
+    // })()
     const profileData: DataItem[] = [
-        { type: 'Report', url: report, path:'/report'},
-        { type: 'CV', url: cv1, path:'/report' },
-        { type: 'Career planning', url: career, path:'/report' },
-        { type: 'CV', url: cv2, path:'/report' },
-        { type: 'Certificate', url: certificate, path:'/report' },
-        { type: 'Certificate', url: certificate , path:'/report'},
+        { type: 'Report', url: report, path: '/report' },
+        { type: 'CV', url: cv1, path: '/report' },
+        { type: 'Career planning', url: career, path: '/report' },
+        { type: 'CV', url: cv2, path: '/report' },
+        { type: 'Certificate', url: certificate, path: '/report' },
+        { type: 'Certificate', url: certificate, path: '/report' },
     ]
+
+
 
 
     const { data } = useGetStageQuery();
@@ -38,10 +79,10 @@ const Profile: React.FC = () => {
         stage_name: stageName,
         stage_children,
     } = data?.[0] || {};
-    
+
     const { slug: subSlugName, stage_name: subStageName } =
         stage_children?.[0] || {};
-    
+
     return (
         <>
             <div className="w-full z-10 relative px-[220px]">
@@ -57,10 +98,11 @@ const Profile: React.FC = () => {
                         </div>
                         <div className='w-[67%]'>
                             <div className='flex items-center gap-[8px] py-[8px]'>
-                                <p>Hello, <span className='text-qss-secondary font-semibold'>Zulekha Hasanova!</span></p>
+                                <p>Hello, <span className='text-qss-secondary font-semibold'>{user?.first_name} {user?.last_name}</span></p>
                                 <img src={hand} alt='Hello Hand' className='w-[28px]' />
                             </div>
                             <p className='py-[8px]'>Start you now to access AI-generated CVs, job fit analysis, and career insights.</p>
+                            <button className='p-4' type='button' onClick={onLogout}>Logout</button>
 
                             <Link
                                 to={`/stages/${slugName}/${subSlugName}`}

@@ -3,6 +3,7 @@ import SpeedometerChart from './SpeedometerChart'
 import PolarAreaChart from './PolarAreaChart'
 import Rate from './Rate'
 import Human from './../../../../../assets/human.png'
+import useAuth from 'hooks/useAuth'
 
 interface Range {
   min: number
@@ -46,6 +47,7 @@ const Report = forwardRef<HTMLDivElement, ReportProps>((props, ref) => {
   const data = props?.mydata?.data
 
 console.log(props);
+const { user } = useAuth()
 
   // const data = {
   //   sport: {
@@ -98,8 +100,8 @@ console.log(props);
   const formattedDate = formatDate(today);
 
   const personalInfo: PersonalInfo = {
-    name: props.userName,
-    surname: '',
+    name: user?.first_name,
+    surname: user?.last_name,
     age: 23,
     testDate: formattedDate,
     testId: props.mydata?.report_key,
@@ -189,10 +191,10 @@ console.log(props);
       <div className='report-body'>
         <div className='report-part-1'>
           <div className='preliminary-info'>
-            <p>Yashar's test results position him in the {addOrdinalSuffix(peerVal)} percentile, indicating that he has outperformed {peerVal}% of his peers.</p>
+            <p>{name} test results position him in the {addOrdinalSuffix(peerVal)} percentile, indicating that he has outperformed {peerVal}% of his peers.</p>
           </div>
           <div className='preliminary-info'>
-            <p>Furthermore, in terms of the overall percentile, Yashar is placed in the {addOrdinalSuffix(overallVal)} percentile, indicating that he is better than {overallVal} percent of everyone</p>
+            <p>Furthermore, in terms of the overall percentile, {name} is placed in the {addOrdinalSuffix(overallVal)} percentile, indicating that he is better than {overallVal} percent of everyone</p>
           </div>
         </div>
         <div className='report-part-2'>

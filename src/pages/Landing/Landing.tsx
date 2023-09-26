@@ -4,8 +4,10 @@ import Footer from './components/Footer';
 import HeroSection from './components/HeroSection';
 import NavBar from './components/NavBar';
 import Process from './components/Process';
+import useAuth from 'hooks/useAuth';
 
 const Landing = () => {
+	
 	return (
 		<div className="relative overflow-hidden">
 			<div className="w-full z-10 min-h-screen relative px-[220px]">

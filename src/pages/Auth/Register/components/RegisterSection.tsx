@@ -3,12 +3,14 @@ import LoginRegisterTextInput from "pages/Auth/components/LoginRegisterTextInput
 import LoginRegisterPasswordInput from "pages/Auth/components/LoginRegisterPasswordInput";
 import LoginRegisterSelect from "pages/Auth/components/LoginRegisterSelect";
 import TalentScore from 'assets/logo-second.svg'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useForm, SubmitHandler } from 'react-hook-form'
 import * as Yup from 'yup'
 import { yupResolver } from "@hookform/resolvers/yup";
 import LoginRegisterDatePickerInput from "pages/Auth/components/LoginRegisterDateInput";
 import axios from "axios";
+import axiosInstance from "axioss";
+import { useState } from "react";
 
 export type IRegisterFormValues = Yup.InferType<typeof RegisterSchema>;
 
@@ -42,6 +44,10 @@ const RegisterSection = () => {
             year: "",
         }
     });
+
+    const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
     const onSubmit: SubmitHandler<IRegisterFormValues> = data => {
         const sendedData = {
             first_name: data.name,
@@ -55,10 +61,21 @@ const RegisterSection = () => {
             password2: data.confirmpassword
         }
 
-        axios.post('http://127.0.0.1:8000/register/', sendedData).then(res => {
-            console.log("Register Successfuly...")
-            reset()
-        })
+
+        const signUp = async () => {
+            try {
+                const response = await axiosInstance.post('user/register/', JSON.stringify(sendedData))
+
+                setLoading(false)
+                console.log('success');
+                
+                navigate('/login')
+            } catch (error) {
+                setLoading(false)
+            }
+        }
+        signUp()
+
     };
 
     return (
@@ -116,7 +133,7 @@ const RegisterSection = () => {
                             <p className="text-red-500  leading-4">{errors.confirmpassword ? errors.confirmpassword.message : ""}</p>
                         </div>
                     </div>
-                    <LoginRegisterButton type="submit" text="Sign up" buttonClassName="w-full bg-qss-primary rounded-3xl  p-3 text-center text-white mt-3 " />
+                    <LoginRegisterButton type="submit" text={`${loading?'Loading...':'Sign up'}`}  buttonClassName={`${loading?'disabled':''}w-full bg-qss-primary rounded-3xl  p-3 text-center text-white mt-3 `} />
                     <p className="w-full text-end text-qss-primary font-normal cursor-pointer my-3">Forgot Password?</p>
                     <p className="text-center w-[405px]"> Already have an account? <Link to={'/login'} className='text-qss-primary'>Log in</Link></p>
                 </form>

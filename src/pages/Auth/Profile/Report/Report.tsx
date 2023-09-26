@@ -5,14 +5,12 @@ import Premium from './components/Premium'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import NavBar from 'pages/Landing/components/NavBar'
-import { useGetQuestionsQuery, useGetStageQuery } from 'services/stage'
-import { useSelector } from 'react-redux'
 import { store } from 'state/store'
 
 function App() {
   
 const currentState = store.getState();
-console.log(currentState.stageForm);
+
 
   const USERS = [
     {

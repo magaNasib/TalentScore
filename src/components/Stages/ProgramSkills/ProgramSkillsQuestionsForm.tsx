@@ -439,7 +439,7 @@ const ProgramSkills = ({
         className="absolute left-0 -bottom-20"
       />
 
-      <Link to='/report'>
+      <Link to='/profile/report'>
         <button
           type={Object.keys(errors).length > 0 ? "button" : "submit"}
           className={`absolute -bottom-[79px] right-0 w-[180px] flex rounded-full justify-center items-center py-3.5 gap-4 bg-qss-secondary flex-row text-white text-white"}`}

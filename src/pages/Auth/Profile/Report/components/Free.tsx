@@ -12,6 +12,7 @@ interface Data {
 }
 
 const Free = ({ mdata,userName }: any) => {
+
   // This variable used for posting to backend
   const [data, setData] = useState<Data>({
     email: 'tami@mail.ru',
