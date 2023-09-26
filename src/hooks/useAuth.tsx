@@ -2,7 +2,10 @@ import { useContext, useDebugValue } from "react";
 import AuthContext from "../store/auth-context"
 export  interface AuthContextType {
     
-        user: object; // Adjust this according to your actual context structure
+        user: {
+            first_name:string,
+            last_name:string
+        }; // Adjust this according to your actual context structure
         setUser: (user:any) => void;
         accessToken: null;
         refreshToken: null;
