@@ -2,7 +2,7 @@ import { useState, createContext } from 'react'
 
 import {AuthContextType} from './../hooks/useAuth'
 export const AuthContext = createContext<AuthContextType>({
-    user: {},
+    user: {first_name:'',last_name:''},
     setUser: () => { },
     accessToken: null,
     refreshToken: null,
@@ -13,7 +13,9 @@ export const AuthContext = createContext<AuthContextType>({
 })
 
 export function AuthContextProvider(props:any) {
-    const [user, setUser] = useState({}); 
+    const [user, setUser] = useState({first_name:'',last_name:''
+    
+    }); 
     const [accessToken, setAccessToken] = useState(null); 
     const [refreshToken, setRefreshToken] = useState(null); 
     const [csrftoken, setCSRFToken] = useState(null); 
