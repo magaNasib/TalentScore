@@ -28,15 +28,14 @@ const LoginSection = () => {
     const { setAccessToken, setCSRFToken } = useAuth()
 
     const usenavigate = useNavigate();
-    
     const location = useLocation()
+    
     const fromLocation = location?.state?.from?.pathname || '/profile'
     const [loading, setLoading] = useState(false)
     
     
-    const { setUser,user } = useAuth()
     const axiosPrivateInstance = useAxiosPrivate()
-
+    
     const { register, handleSubmit, watch, trigger, formState: { errors } } = useForm<IloginFormValues>({
         resolver: yupResolver(LoginSchema),
         defaultValues: {
@@ -44,18 +43,14 @@ const LoginSection = () => {
             password: ""
         }
     });
-    useEffect(() => {
-        async function getUser() {
-            const { data } = await axiosPrivateInstance.get('user/user/')
-            setUser(data)
-            console.log(user);
-            
+    const { user } = useAuth()
 
-        }
 
-        getUser()
-    }, [])
-
+	useEffect(()=>{
+		if(user.first_name){
+        usenavigate('/')
+	}
+	},[user])
 
     const handleLogin = async (userData: object) => {
 

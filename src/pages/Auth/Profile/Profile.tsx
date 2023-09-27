@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Footer from './../../Landing/components/Footer'
 import NavBar from './../../Landing/components/NavBar'
 import Document from './components/Document'
-import profilPhoto from './../../../assets/profilePhoto.jpg'
+import profilPhoto from './../../../assets/user.png'
 import hand from './../../../assets/hand.png'
 import report from './../../../assets/profileReport.png'
 import cv1 from './../../../assets/profileCV1.png'
@@ -27,23 +27,38 @@ interface DataItem {
 
 const Profile: React.FC = () => {
 
-    const { user, setUser } = useAuth()
 
     const axiosPrivateInstance = useAxiosPrivate()
     const navigate = useNavigate()
     const logout = useLogout()
     const [loading, setLoading] = useState(false)
 
+    const { user, setUser } = useAuth()
 
 
     useEffect(() => {
         async function getUser() {
             const { data } = await axiosPrivateInstance.get('user/user/')
             setUser(data)
+            // if (!data?.first_name) {
+            //     navigate('/login')
+            // }
         }
 
         getUser()
     }, [])
+    // const { user } = useAuth()
+    // const [isLogin, setIsLogin] = useState(false);
+
+
+    // useEffect(()=>{
+    // 	if(user.first_name){    
+    // 	setIsLogin(true)
+
+    // }
+    // },[user])
+
+
 
 
 
@@ -92,7 +107,7 @@ const Profile: React.FC = () => {
                 <div className='bg-qss-transbg h-[224px] flex justify-center'>
                     <div className='w-[1090px] flex items-center'>
                         <div className='flex justify-center items-center w-[32%]'>
-                            <div className='w-[145px] h-[145px] p-[2px] rounded-full overflow-hidden flex justify-center bg-gradient-to-t from-qss-gradientBottom to-qss-gradientTop'>
+                            <div className='w-[145px] h-[145px] p-[10px] rounded-full overflow-hidden flex justify-center bg-gradient-to-t from-qss-gradientBottom to-qss-gradientTop'>
                                 <img src={profilPhoto} alt='Profile Photo' className='w-full object-cover rounded-full' />
                             </div>
                         </div>

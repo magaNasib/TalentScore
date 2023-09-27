@@ -1,8 +1,9 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ReactComponent as Logo } from 'assets/logo-second.svg';
 import { Bars3Icon } from '@heroicons/react/24/outline';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useAuth from 'hooks/useAuth';
+import { axiosPrivateInstance } from 'axioss';
 
 export interface IWebMenu {
 	links: { text: string; path: string }[];
@@ -24,7 +25,16 @@ export const WebMenu = ({ links }: IWebMenu) => {
 };
 
 const NavBar = () => {
-	const { user, setUser } = useAuth()
+	const { user } = useAuth()
+	const [isLogin, setIsLogin] = useState(false);
+
+
+	useEffect(()=>{
+		if(user.first_name){
+		setIsLogin(true)
+		return
+	}
+	},[user])
 
 	const links = [
 		{
@@ -58,7 +68,7 @@ const NavBar = () => {
 						<WebMenu links={links} />
 					</nav>
 				</div>
-				{!user.first_name &&
+				{!isLogin &&
 					<div className="flex gap-6 text items-center">
 						<Link to={'/login'} className="group overflow-hidden hover:text-qss-secondary">
 							Sign in
@@ -70,10 +80,10 @@ const NavBar = () => {
 					</div>
 				}
 				{
-					user.first_name &&
+					isLogin &&
 					<Link to={'/profile'} className="bg-qss-secondary text-white rounded-3xl px-10 py-2">
-							{user.first_name[0]}{user.last_name[0]}
-						</Link>
+						{user.first_name[0]}{user.last_name[0]}
+					</Link>
 				}
 			</div>
 

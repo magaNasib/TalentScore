@@ -10,7 +10,8 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import LoginRegisterDatePickerInput from "pages/Auth/components/LoginRegisterDateInput";
 import axios from "axios";
 import axiosInstance from "axioss";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import useAuth from "hooks/useAuth";
 
 export type IRegisterFormValues = Yup.InferType<typeof RegisterSchema>;
 
@@ -45,9 +46,20 @@ const RegisterSection = () => {
         }
     });
 
+    
+
     const [loading, setLoading] = useState(false);
 
     const navigate = useNavigate();
+    const { user } = useAuth()
+
+
+	useEffect(()=>{
+		if(user.first_name){
+        navigate('/')
+	}
+	},[user])
+
     const onSubmit: SubmitHandler<IRegisterFormValues> = data => {
         const sendedData = {
             first_name: data.name,
@@ -63,6 +75,7 @@ const RegisterSection = () => {
 
 
         const signUp = async () => {
+            
             try {
                 const response = await axiosInstance.post('user/register/', JSON.stringify(sendedData))
 

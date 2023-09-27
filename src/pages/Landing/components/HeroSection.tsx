@@ -1,9 +1,22 @@
 import { Link } from "react-router-dom";
 import HeroImg from "assets/hero-image.webp";
+import useAuth from "hooks/useAuth";
+import { useEffect, useState } from "react";
 // import {  useGetStageQuery } from "services/stage";
 
 
 const HeroSection = () => {
+  const { user } = useAuth()
+	const [isLogin, setIsLogin] = useState(false);
+
+
+	useEffect(()=>{
+		if(user.first_name){
+		setIsLogin(true)
+		return
+	}
+	},[user])
+
   // const { data } = useGetStageQuery();
   // const {
   //   slug: slugName,
@@ -53,10 +66,7 @@ const HeroSection = () => {
                 stageName: stageName,
               }}
             > */}
-            <Link
-              to={`/profile`}
-
-            >
+            <Link to={`/${isLogin?'profile':'login'}`}>
               <button className="flex justify-center items-center py-3 px-8 text-white rounded-full bg-qss-primary">
                 Get started
               </button>
