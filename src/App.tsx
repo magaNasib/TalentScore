@@ -12,7 +12,7 @@ import Profile from 'pages/Auth/Profile/Profile';
 import PersistLogin from 'pages/Landing/components/PersistLogin';
 import Home from 'pages/Home';
 import Report from 'pages/Auth/Profile/Report/Report';
-import CV from 'pages/Auth/Profile/cv/pages/Resume/cv';
+import CV from 'pages/Auth/Profile/cv/pages/Resume/CV';
 
 
 const App = () => {
