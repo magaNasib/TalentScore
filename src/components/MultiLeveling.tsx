@@ -44,13 +44,13 @@ const MultiLeveling = ({ value, data, register }: IMultiLeveling) => {
                   className="rounded-lg px-4 py-2.5 text-sm cursor-pointer"
                   onClick={() => {
                     setDropdown(false);
-                    setSelected((prev) =>
+                    id && setSelected((prev) =>
                       prev?.find((p) => p.name === answer_title)
                         ? prev
                         : prev && [
-                            ...prev,
-                            { id: id, name: answer_title, level: "" },
-                          ]
+                          ...prev,
+                          { id: +id, name: answer_title, level: "" },
+                        ]
                     );
                   }}
                 >
