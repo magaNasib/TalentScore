@@ -12,6 +12,8 @@ import Profile from 'pages/Auth/Profile/Profile';
 import PersistLogin from 'pages/Landing/components/PersistLogin';
 import Home from 'pages/Home';
 import Report from 'pages/Auth/Profile/Report/Report';
+import CV from 'pages/Auth/Profile/cv/pages/Resume/cv';
+
 
 const App = () => {
 	const { showReport } = useAppSelector(state => state.reportState);
@@ -32,8 +34,9 @@ const App = () => {
 					<Route path='profile' element={<AuthMiddleware />}>
 						<Route index element={<Profile />}></Route>
 						<Route path='report' element={<Report />}></Route>
+						<Route path='cv' element={<CV/>}></Route>
 					</Route>
-					<Route path='stages/:stageSlug/:subStageSlug' element={<Stages/>}></Route>
+					<Route path='stages/:stageSlug/:subStageSlug' element={<Stages />}></Route>
 				</Route>
 				<Route path='*' element={<Navigate to='/' />}></Route>
 

@@ -64,6 +64,8 @@ const Free = ({ mdata,userName }: any) => {
     }
   }, [img])
 
+  // console.log(img);
+  
   // This function used to toggle modal
   const toggleModal = () => {
     setModal(!modal)

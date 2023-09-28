@@ -6,10 +6,11 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import NavBar from 'pages/Landing/components/NavBar'
 import { store } from 'state/store'
+import axiosInstance, { axiosPrivateInstance } from 'axioss'
 
 function App() {
-  
-const currentState = store.getState();
+
+  const currentState = store.getState();
 
 
   const USERS = [
@@ -513,62 +514,46 @@ const currentState = store.getState();
     }
 
   ]
-  const [login, setLogin] = useState(true)
-  const [email, setEmail] = useState('admin@mail.ru')
-  const [userName, setUserName] = useState('Tamerlan Aliyev')
   const [data, setData] = useState()
-  const [msg, setMsg] = useState('')
-  const [myUser, setMyUser] = useState<any>(currentState.stageForm)
-  
+
   useEffect(() => {
-    
-    const fetchData = async () => {
 
-      try {
-        await axios
-          .post('https://qssanalyticstalentscore.pythonanywhere.com/user/user-education-score/', {
-            user_info: myUser
-          })
-          .then(res => {
-            setData(res.data)
-          })
-      } catch (error) { }
+
+    const getScores = async () => {
+      const response = await axiosPrivateInstance.post('user/user-education-score/', {
+        user_info: currentState.stageForm
+      })
+      response.status === 200 && setData(response.data)
+
+      console.log(response);
+
     }
+    currentState?.stageForm?.length > 0 && getScores()
+  }, [])
+  console.log(data);
 
+  // useEffect(() => {
 
-    email && fetchData();
-  }, [myUser])
+  //   const fetchData = async () => {
 
-
-
-  const handleLoginBtn = (e: any) => {
-    e.preventDefault()
-
-    let mUser = USERS.find((user) => user.email === email.trim());
-
-    if (mUser) {
-      setMyUser(mUser.user_info)
-
-
-      setUserName(mUser.name);
-
-
-      setMsg('')
-      setLogin(log => !log)
-    }
-    else {
-      setMsg('Invalid Email')
-    }
-  }
+  //     try {
+  //       await axios
+  //         .post('https://qssanalyticstalentscore.pythonanywhere.com/user/user-education-score/', {
+  //           user_info: myUser
+  //         })
+  //         .then(res => {
+  //           setData(res.data)
+  //         })
+  //     } catch (error) { }
+  //   }
+  //   email && fetchData();
+  // }, [myUser])
 
 
 
-  const handleLogoutBtn = (e: any) => {
-    e.preventDefault();
-    setEmail('');
-    setLogin(log => !log)
 
-  }
+
+
 
 
   return (
@@ -581,24 +566,12 @@ const currentState = store.getState();
 
         <h1 className='report-done mt-8'>Well done!</h1>
         <h3 className='report-title'>Your talent report is here, offering valuable insights into your abilities. Embrace your talents and set new goals!</h3>
-        {
-          !login &&
-          <form action="/" onSubmit={handleLoginBtn}>
-            <div className='input-container'>
 
-              <input type="email" placeholder='Enter your email' required value={email} onChange={(e: any) => { setEmail(e.target.value) }} />
-              <button type='submit'>Login</button>
-              <p style={{ color: 'red', fontSize: '1.2rem' }}>{msg}</p>
-            </div>
-          </form>
-        }
+        <div className='free-premium-report'>
+          {data && <Free mdata={data} />}
+          <Premium />
+        </div>
 
-        {
-          login && <div className='free-premium-report'>
-            {data && <Free mdata={data} userName={userName} />}
-            <Premium />
-          </div>
-        }
       </div>
     </>
   )

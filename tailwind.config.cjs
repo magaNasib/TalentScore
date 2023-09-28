@@ -29,7 +29,8 @@ module.exports = {
 					'base-100': '#CACACA',
 					'base-200': '#D9D9D9',
 					'base-300': '#ADADAD',
-					'base-400': '#E1EEED'
+					'base-400': '#E1EEED',
+					"base-500": "#22BBAD"
 				}
 			},
 

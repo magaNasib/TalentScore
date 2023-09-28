@@ -39,6 +39,7 @@ const Profile: React.FC = () => {
     useEffect(() => {
         async function getUser() {
             const { data } = await axiosPrivateInstance.get('user/user/')
+        
             setUser(data)
             // if (!data?.first_name) {
             //     navigate('/login')
@@ -77,7 +78,7 @@ const Profile: React.FC = () => {
     // })()
     const profileData: DataItem[] = [
         { type: 'Report', url: report, path: '/report' },
-        { type: 'CV', url: cv1, path: '/report' },
+        { type: 'CV', url: cv1, path: '/cv' },
         { type: 'Career planning', url: career, path: '/report' },
         { type: 'CV', url: cv2, path: '/report' },
         { type: 'Certificate', url: certificate, path: '/report' },

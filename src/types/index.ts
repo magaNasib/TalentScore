@@ -47,14 +47,19 @@ export interface IQuestionQuestion {
 }
 
 export interface IAnswer {
-  id: number;
+  id?: number;
   stage_fit?: null | string;
   answer_title: string;
-  answer_weight: null;
+  answer_weight: string;
   answer_dependens_on?: number | null;
 }
 
 export interface ISelectedValue {
   answer: string;
-  answer_weight?: string|null |undefined;
+  answer_weight?: string | null | undefined;
+}
+
+export interface SelectedValue {
+  answer? : any[] | string;
+  answer_weight? : string | null | undefined;
 }

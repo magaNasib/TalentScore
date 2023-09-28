@@ -27,6 +27,7 @@ body.active-modal {
 }
 
 .free {
+    scale: .9;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -149,20 +150,20 @@ body.active-modal {
 }
 
 .report {
-    width: 595.3px;
+    /* width: 595.3px; */
     height: 100%;
     background-color: #fff;
 }
 
 .scaled-report {
     width: 100%;
-    scale: 0.73;
+    /* scale: 0.83; */
     user-select: none;
-    margin: -120px 0 0 -60px;
+    /* margin: -12px 0 0 -20px; */
 }
 
 .report-header {
-    width: 115%;
+    /* width: 115%; */
     display: flex;
     justify-content: space-between;
     padding: 39.9px 42.5px 39.6px 42.5px;
@@ -219,8 +220,8 @@ body.active-modal {
 }
 
 .report-body {
-    width: 115%;
-    padding: 37.9px 42.5px 12px 42.5px;
+    /* width: 115%; */
+    padding: 37.9px 42.5px 32px 42.5px;
 }
 
 .report-part-1 {
