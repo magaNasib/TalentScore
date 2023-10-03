@@ -4,7 +4,10 @@ export  interface AuthContextType {
     
         user: {
             first_name:string,
-            last_name:string
+            last_name:string,
+            report_test:boolean,
+            email:string,
+            
         }; // Adjust this according to your actual context structure
         setUser: (user:any) => void;
         accessToken: null;

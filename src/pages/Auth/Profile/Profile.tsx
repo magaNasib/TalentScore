@@ -58,13 +58,16 @@ const Profile: React.FC = () => {
     useEffect(() => {
         async function getUser() {
             const { data } = await axiosPrivateInstance.get('user/user/')
+            
             setUser(data)
+        console.log(data);
             // if (!data?.first_name) {
             //     navigate('/login')
             // }
         }
 
         getUser()
+        
     }, [])
     useEffect(() => {
         async function getFiles() {
@@ -156,7 +159,7 @@ const Profile: React.FC = () => {
                             <p className='py-[8px]'>Start you now to access AI-generated CVs, job fit analysis, and career insights.</p>
                             <button className='p-4' type='button' onClick={onLogout}>Logout</button>
 
-                            <Link
+                            {!user.report_test && <Link
                                 to={`/profile/stages/${slugName}/${subSlugName}`}
                                 state={{
                                     subStageName: subStageName,
@@ -164,7 +167,10 @@ const Profile: React.FC = () => {
                                 }}
                             >
                                 <button className='w-[243px] text-[14px] text-white py-[10px] px-[24px] rounded-[25px] float-right bg-gradient-to-t from-qss-gradientBottom to-qss-gradientTop'>Start Test</button>
-                            </Link>
+                            </Link>}
+                            {
+                                user?.report_test && <p className='w-[243px] text-[14px] text-white py-[10px] px-[24px] rounded-[25px] float-right bg-gradient-to-t from-qss-gradientBottom to-qss-gradientTop'>You passed the test</p>
+                            }
                         </div>
                     </div>
                 </div>

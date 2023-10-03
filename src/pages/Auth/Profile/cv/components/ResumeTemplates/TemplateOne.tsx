@@ -3,6 +3,9 @@ import { templateOne } from "../../constants/resumes";
 import { FaLinkedin, FaFacebook, FaInstagram, FaGithub } from "react-icons/fa6";
 import { read } from "../../services/axios";
 import TextSkeleton from "../Skeleton/TextSkeleton";
+import { useEffect, useState } from "react";
+import { axiosPrivateInstance } from "axioss";
+import useAuth from "hooks/useAuth";
 // import { Page, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 
 // // Create styles
@@ -33,26 +36,25 @@ import TextSkeleton from "../Skeleton/TextSkeleton";
 // );
 
 const getIcon = (iconKey: string) =>
-  ({
-    in: <FaLinkedin className="text-xs" />,
-    fb: <FaFacebook className="text-xs" />,
-    insta: <FaInstagram className="text-xs" />,
-    github: <FaGithub className="text-xs" />,
-  }[iconKey]);
+({
+  in: <FaLinkedin className="text-xs" />,
+  fb: <FaFacebook className="text-xs" />,
+  insta: <FaInstagram className="text-xs" />,
+  github: <FaGithub className="text-xs" />,
+}[iconKey]);
 
-const experienceUrl = "https://qssanalyticstalentscore.pythonanywhere.com/user/get-experiance-prompt/tami%40mail.ru/";
-const summaryUrl = 'https://qssanalyticstalentscore.pythonanywhere.com/user/get-summry-prompt/tami%40mail.ru/'
-const fetcher = (url : string) => fetch(url).then((res) => res.json());
+
 
 const getPerc = (levelKey: string) =>
-  ({
-    beginner: 25,
-    junior: 50,
-    middle: 75,
-    senior: 100,
-  }[levelKey]);
+({
+  beginner: 25,
+  junior: 50,
+  middle: 75,
+  senior: 100,
+}[levelKey]);
 
 const TemplateOne = () => {
+
   const {
     fullName,
     job,
@@ -63,17 +65,50 @@ const TemplateOne = () => {
     skills,
   } = templateOne;
 
-  const {
-    data: summaryData,
-    isLoading: summaryLoading,
-    error: summaryError,
-  } = useSWR(summaryUrl, fetcher, { revalidateOnFocus: false });
 
-  const {
-    data: experienceData,
-    isLoading: experienceLoading,
-    error: experienceError,
-  } = useSWR(experienceUrl, fetcher, { revalidateOnFocus: false });
+
+  const [data, setData] = useState<any>();
+  const {user} = useAuth()
+  // let user = {
+  //   email
+  //     :
+  //     "mnasibdev@gmail.com",
+  //   first_name
+  //     :
+  //     "Mahammad",
+  //   gender
+  //     :
+  //     "Male",
+  //   last_name
+  //     :
+  //     "Nasibov",
+  //   report_test
+  //     :
+  //     true
+  // }
+  const [summaryLoading, setSummaryLoading] = useState(true);
+  useEffect(() => {
+
+    async function getCvData() {
+      const response = await axiosPrivateInstance.get('user/get-summry-prompt/')
+      const response2 = await axiosPrivateInstance.get('user/get-cv-content-prompt/')
+      const response3 = await axiosPrivateInstance.get('user/get-job-title-prompt/')
+      const response4 = await axiosPrivateInstance.get('user/get-experiance-prompt/')
+
+      setData({
+        ...response.data,
+        ...response2.data,
+        ...response3.data,
+        ...response4.data
+      })
+      // summary = response.data?.
+      response.status === 200 && setSummaryLoading(false)
+
+    }
+    getCvData()
+  }, [])
+  // console.log(user);
+  
 
   return (
     <div className="relative overflow-hidden border rounded shadow w-[100%] p-3 font-montserrat">
@@ -84,13 +119,13 @@ const TemplateOne = () => {
           <div className="flex items-center justify-between mt-10 -tracking-[0.2px]">
             <div className="space-y-10">
               <div className="text-[11px]">
-                <h1 className="font-semibold">{fullName}</h1>
+                <h1 className="font-semibold">{user.first_name + ' ' + user.last_name}</h1>
 
-                <p className="text-qss-base-500">{job}</p>
+                <p className="text-qss-base-500">{data?.sample_job_title}</p>
               </div>
 
               <div className="text-[8px]">
-                <p>{contacts.gmail}</p>
+                <p>{user?.email}</p>
 
                 <p className="font-semibold ">{contacts.phone}</p>
               </div>
@@ -118,7 +153,7 @@ const TemplateOne = () => {
             {summaryLoading ? (
               <TextSkeleton />
             ) : (
-              summaryData?.["sample_summary"]
+              data?.["sample_summary"]
             )}
           </p>
         </div>
@@ -131,7 +166,7 @@ const TemplateOne = () => {
             <div className="border-l border-dotted border-qss-alternative min-h-72" />
 
             <div className="pl-2 space-y-4">
-              {workExperience.map(({ header, desc }, index) => (
+              {/* {workExperience.map(({ header, desc }, index) => (
                 <div key={index} className="text-[8px]">
                   <h2 className="font-bold">{header.jobTitle}</h2>
                   <p className="text-qss-base-500">{header.workPlace}</p>
@@ -139,18 +174,18 @@ const TemplateOne = () => {
                     {header.date.startDate} - {header.date.endDate}
                   </p>
 
-                  <ul className="text-[6px] list-inside list-disc pt-1">
-                    {experienceData?.["job_experience"]?.map(
-                      (d: string, index: number) => (
-                        <li key={index}>{d}</li>
-                      )
-                    )}
-                    {/* {desc.map((d, index) => (
+                  <ul className="text-[6px] list-inside list-disc pt-1"> */}
+              {data?.["job_experience"]?.map(
+                (d: string, index: number) => (
+                  <li key={index}>{d}</li>
+                )
+              )}
+              {/* {desc.map((d, index) => (
                       <li key={index}>{d}</li>
                     ))} */}
-                  </ul>
+              {/* </ul>
                 </div>
-              ))}
+              ))} */}
             </div>
           </div>
 

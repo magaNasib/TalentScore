@@ -533,7 +533,6 @@ function App() {
     }
     currentState?.stageForm?.length > 0 && getScores()
   }, [])
-  console.log(data);
 
   // useEffect(() => {
 
