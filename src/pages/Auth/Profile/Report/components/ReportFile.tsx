@@ -121,14 +121,15 @@ const { user } = useAuth()
   const fullName = `${name} ${surname}`
   const peerVal = 81
   let overallVal = 0
-  function roundToTenDecimalPlaces(number: any) {
-    return Math.round(number * 1e10) / 1e10;
-  }
+  // function roundToTenDecimalPlaces(number: any) {
+  //   return number.toFixed(2)
+  // }
   Object.values(data).forEach((item) => {
     overallVal += item.score;
   });
 
-  overallVal = roundToTenDecimalPlaces(+overallVal) / (Object.keys(data)).length
+  // overallVal = roundToTenDecimalPlaces(+overallVal) / (Object.keys(data)).length
+  overallVal = Number((overallVal/ (Object.keys(data)).length).toFixed(2))
   // This function used for the create suffix for the number
   const addOrdinalSuffix = (number: number) => {
     const lastDigit = number % 10
