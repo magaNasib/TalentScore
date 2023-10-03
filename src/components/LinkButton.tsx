@@ -21,7 +21,7 @@ type navType = {
 const LinkButton = ({disabled, label, type, nav, className, haveIcon = true, onClick}: ILinkButton) => {
 	return (
 		<Link
-			to={`/stages/${nav.path.slugName}/${nav.path.subSlugName}`}
+			to={`/profile/stages/${nav.path.slugName}/${nav.path.subSlugName}`}
 			state={{
 				subStageName: nav.state.subStageName,
 				stageName: nav.state.stageName

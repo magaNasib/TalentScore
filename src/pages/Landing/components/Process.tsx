@@ -3,9 +3,11 @@ import { ReactComponent as TestingIcon } from "assets/testing.svg";
 import { ReactComponent as ReportIcon } from "assets/report.svg";
 import { ReactComponent as ChatBotIcon } from "assets/chatbot.svg";
 import { Link } from "react-router-dom";
-import { useGetStageQuery } from "services/stage";
+import GetStage from "services/GetStage";
 
 const Process = () => {
+  
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data } = useGetStageQuery();
   const {
     slug: slugName,

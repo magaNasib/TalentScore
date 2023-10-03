@@ -2,10 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import {
-  useGetQuestionsQuery,
-  useGetStageQuery,
-} from "../../../services/stage";
+import GetStage from "../../../services/GetStage";
 import Radio from "../../RadioInput";
 import LinkButton from "../../LinkButton";
 import { updateStageForm } from "../../../state/stages/stageFormSlice";
@@ -55,6 +52,8 @@ const ProgramSkills = ({
   subStageSlug,
 }: GeneralQuestionsFormProps) => {
   const { showReport } = useAppSelector((state) => state.reportState);
+
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
 
   const { stage_children } = stagesData?.[stageIndex] || {};

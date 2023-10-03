@@ -5,13 +5,14 @@ import domtoimage from 'dom-to-image'
 import Report from './ReportFile'
 import Modal from './Modal'
 import download from './../../../../../assets/downloadicon.svg'
+import { axiosPrivateInstance } from 'axioss'
 
 interface Data {
   email: string
   report_file: string
 }
 
-const Free = ({ mdata,userName }: any) => {
+const Free = ({ mdata, userName }: any) => {
 
   // This variable used for posting to backend
   const [data, setData] = useState<Data>({
@@ -26,7 +27,7 @@ const Free = ({ mdata,userName }: any) => {
   const [imgUrl, setImgUrl] = useState('')
 
   // This variable used for the disable share button until getting response
-  const [disable, setDisable] = useState(false)
+  const [disable, setDisable] = useState(true)
 
   const componentRef = useRef<HTMLDivElement>(null)
 
@@ -47,31 +48,44 @@ const Free = ({ mdata,userName }: any) => {
   // This function used for posting data to the backend 
   const postData = async () => {
     try {
-      await axios.post('https://nazimbudaqli.pythonanywhere.com/user/upload-report/', {
-        email: 'tami@mail.ru', 
+      // await axios.post('https://nazimbudaqli.pythonanywhere.com/user/upload-report/', {
+      //   email: 'tami@mail.ru', 
+      //   report_file: img
+      // }).then(res=>{
+      //   setImgUrl(res.data.report_file)
+      //   setDisable(true)        
+      // })
+
+
+      const response = await axiosPrivateInstance.post('user/upload-report/', {
         report_file: img
-      }).then(res=>{
-        setImgUrl(res.data.report_file)
-        setDisable(true)        
       })
-    } catch (error) {}  
-  } 
+      setDisable(true)
+
+
+      console.log(response);
+
+
+      // console.log(data);
+    } catch (error) { }
+  }
 
   // This useEffect used for checking data and running posData function
   useEffect(() => {
     if (img !== null && img !== undefined && img !== '') {
-      // postData()  
+      postData()
     }
   }, [img])
 
+
   // console.log(img);
-  
+
   // This function used to toggle modal
   const toggleModal = () => {
     setModal(!modal)
   }
 
-  
+
   // This function used for convert component to the pdf
   const generatePDF = useReactToPrint({
     content: () => componentRef.current as HTMLElement,
@@ -85,7 +99,7 @@ const Free = ({ mdata,userName }: any) => {
         <h2 className='free-header'>with overall and sector-specific percentiles</h2>
         <div className='free-report'>
           <div className='scaled-report'>
-            <Report mydata={mdata} userName = {userName} ref={componentRef} />
+            <Report mydata={mdata} userName={userName} ref={componentRef} />
           </div>
           <button onClick={generatePDF} className='report-download'>
             <p className='download-text'>FREE DOWNLOAD</p>

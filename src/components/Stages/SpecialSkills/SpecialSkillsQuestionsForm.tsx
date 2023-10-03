@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import {
-  useGetQuestionsQuery,
-  useGetStageQuery,
-} from "../../../services/stage";
+import GetStage from "../../../services/GetStage";
 import Radio from "../../RadioInput";
 import LinkButton from "../../LinkButton";
 import { updateStageForm } from "../../../state/stages/stageFormSlice";
@@ -65,6 +62,8 @@ const SpecialSkillsForm = ({
   stageIndex,
   subStageSlug,
 }: GeneralQuestionsFormProps) => {
+  
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
 
   const { stage_children } = stagesData?.[stageIndex] || {};

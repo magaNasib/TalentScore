@@ -8,9 +8,11 @@ import { useForm, SubmitHandler } from 'react-hook-form'
 import LoginRegisterPasswordInput from "pages/Auth/components/LoginRegisterPasswordInput";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { axiosInstance } from "services/api";
+// import { axiosInstance } from "services/api";
+
 import useAuth from '../../../../hooks/useAuth.js'
 import useAxiosPrivate from 'hooks/useAxiosPrivate'
+import axiosInstance from "axioss/index.js";
 
 // import { toast } from "react-toastify";
 
@@ -59,51 +61,18 @@ const LoginSection = () => {
 
 
         try {
-
             const response = await axiosInstance.post('user/login/',JSON.stringify(userData))
             
+            console.log(response);
+            
+            localStorage.setItem('access_token',response?.data?.access_token)
             setAccessToken(response?.data?.access_token)
+
             setCSRFToken(response.headers["x-csrftoken"])
             setLoading(false)
 
             usenavigate(fromLocation, { replace: true })
-            // const response = await axios.post(API_LOGIN_URL, userData, { withCredentials: true })
-            // console.log("Login Succesfully", response);
-            // setCookie('csrftoken', response.headers['x-csrftoken'], { path: '/' });
-         
-
-            // const response = await fetch(API_LOGIN_URL, {
-            //     'method': 'POST',
-            //     'body': JSON.stringify(userData),
-            //     'credentials': 'include',
-            //     'mode': 'cors',
-            //     'headers': {
-            //         'accept': 'application/json, text/plain, */*', 'content-type': 'application/json'
-            //     }
-            // })
-            //     .then(function (res) {
-
-            //         if (Object.keys(res).length === 0) {
-            //             // toast.error('Please Enter valid username');
-            //         }
-            //         if (res.status === 200) {
-
-            //             usenavigate('/')
-
-            //             return res.json()
-            //         } else {
-            //             return res.json()
-            //         }
-            //     })
-            //     .then((res) => {
-            //         sessionStorage.setItem('userrole',JSON.stringify(res));
-
-            //         return res
-            //     })
-
-            // console.log("Login Succesfully", response);
-
-
+           
 
 
         } catch (error) {

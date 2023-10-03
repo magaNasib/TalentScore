@@ -10,6 +10,7 @@ export const axiosInstance = axios.create({
   },
 });
 
+
 export const getStages = async () => {
   const { data } = await axiosInstance.get("stage-parent-lists/");
   return data?.stages;

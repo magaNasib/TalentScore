@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import {
-  useGetQuestionsQuery,
-  useGetStageQuery,
-} from "../../../services/stage";
+import GetStage from "../../../services/GetStage";
 import Radio from "../../RadioInput";
 import LinkButton from "../../LinkButton";
 import { updateStageForm } from "../../../state/stages/stageFormSlice";
@@ -55,6 +52,8 @@ interface RootState {
 }
 
 const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
+  
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
   const errLengt = useSelector((state: RootState) => state.dataa.errorsLength);
   const { stage_children } = stagesData?.[stageIndex] || {};
@@ -157,7 +156,7 @@ const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
     const nextSubSlug = isProExist ? nextSubSlugName : nextSubSlugNameCond;
     const nextStage = isProExist ? nextStageName : nextStageNameCond;
     const nextSubStage = isProExist ? nextSubStageName : nextSubStageNameCond;
-    nav(`/stages/${nextSlug}/${nextSubSlug}`, {
+    nav(`/profile/stages/${nextSlug}/${nextSubSlug}`, {
       state: {
         subStageName: nextSubStage,
         stageName: nextStage,

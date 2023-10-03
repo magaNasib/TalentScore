@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useState, useCallback } from "react";
 import { useParams, useLocation, Link } from "react-router-dom";
-import { useGetStageQuery } from "../services/stage";
+import GetStage from "../services/GetStage";
 import ProgressBar from "./ProgressBar";
 import GeneralQuestionsForm from "./Stages/Education/GeneralQuestionsForm";
 import EducationQuestionsForm from "./Stages/Education/EducationQuestionsForm";
@@ -16,6 +16,8 @@ import SpecialSkillsCertifcateQuestionsForm from "./Stages/SpecialSkills/Special
 import ClockLoader from "react-spinners/ClockLoader";
 
 const Stage = () => {
+  
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data, error, isLoading } = useGetStageQuery();
 
   const { stageName } = (useLocation().state as {

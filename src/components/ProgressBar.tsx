@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useGetStageQuery } from "../services/stage";
+import b from "../services/GetStage";
 import { GeneralQuestionsFormProps } from "./Stages/Education/GeneralQuestionsForm";
 
 type ProgressBarType = {
@@ -11,6 +11,7 @@ type ProgressBarType = {
 
 
 const ProgressBar = ({ progress = 0,subStageIndex,stageIndex }: ProgressBarType) => {
+  const {useGetStageQuery} = b()
   const { data: stagesData } = useGetStageQuery();
 
   

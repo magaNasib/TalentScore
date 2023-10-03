@@ -10,13 +10,13 @@ import cv2 from './../../../assets/profileCV2.png'
 import career from './../../../assets/profileCareer.png'
 import certificate from './../../../assets/profileCertificate.png'
 import { Link, useNavigate } from 'react-router-dom'
-import { useGetStageQuery } from "services/stage";
+import GetStage from "services/GetStage";
 import axios from 'axios'
-import { axiosPrivateInstance } from 'axioss'
+import axiosInstance, { axiosPrivateInstance } from 'axioss'
 import useAuth from 'hooks/useAuth'
 import useAxiosPrivate from 'hooks/useAxiosPrivate'
 import useLogout from 'hooks/useLogout'
-
+import getToken from 'helper/getToken'
 
 
 interface DataItem {
@@ -24,22 +24,40 @@ interface DataItem {
     url: string
     path: string
 }
+interface Files {
+    report: string,
+    cv1: string,
+    cv2: string,
+    career: string,
+    certificate: string
+}
+
 
 const Profile: React.FC = () => {
 
-
+    const { useGetStageQuery } = GetStage()
+    const { data: stagesData } = useGetStageQuery();
     const axiosPrivateInstance = useAxiosPrivate()
     const navigate = useNavigate()
     const logout = useLogout()
     const [loading, setLoading] = useState(false)
+    const [files, setFiles] = useState<Files>({
+        report: report,
+        cv1: cv1,
+        cv2: cv2,
+        career: career,
+        certificate: certificate
+
+    })
+    
 
     const { user, setUser } = useAuth()
 
+    
 
     useEffect(() => {
         async function getUser() {
             const { data } = await axiosPrivateInstance.get('user/user/')
-        
             setUser(data)
             // if (!data?.first_name) {
             //     navigate('/login')
@@ -48,9 +66,35 @@ const Profile: React.FC = () => {
 
         getUser()
     }, [])
+    useEffect(() => {
+        async function getFiles() {
+            const resp = await axiosPrivateInstance.get('user/user-accounts-files/')
+
+            console.log(resp);
+            
+            resp?.data && await setFiles({
+                report: resp.data.find((file: any) => (file.file_category == 'REPORT'))?.file || report,
+                cv1: resp.data.find((file: any) => (file.file_category == 'CV'))?.file || cv1,
+                cv2: resp.data.find((file: any) => (file.file_category == 'CV'))?.file || cv2,
+                career: resp.data.find((file: any) => (file.file_category == 'CAREER'))?.file || career,
+                certificate: resp.data.find((file: any) => (file.file_category == 'CERTIFICATE'))?.file || certificate,
+            })
+
+
+        }
+
+        getFiles()
+    }, [files.report, files.career, files.certificate])
     // const { user } = useAuth()
     // const [isLogin, setIsLogin] = useState(false);
-
+    const profileData: DataItem[] = [
+        { type: 'Report', url: files.report, path: '/report' },
+        { type: 'CV', url: files.cv1, path: '/cv' },
+        { type: 'Career planning', url: files.career, path: '/report' },
+        { type: 'CV', url: files.cv2, path: '/report' },
+        { type: 'Certificate', url: files.certificate, path: '/certificate' },
+        // { type: 'Certificate', url: certificate, path: '/certificate' },
+    ]
 
     // useEffect(()=>{
     // 	if(user.first_name){    
@@ -76,14 +120,6 @@ const Profile: React.FC = () => {
     //     console.log(data);
     //     return data;
     // })()
-    const profileData: DataItem[] = [
-        { type: 'Report', url: report, path: '/report' },
-        { type: 'CV', url: cv1, path: '/cv' },
-        { type: 'Career planning', url: career, path: '/report' },
-        { type: 'CV', url: cv2, path: '/report' },
-        { type: 'Certificate', url: certificate, path: '/report' },
-        { type: 'Certificate', url: certificate, path: '/report' },
-    ]
 
 
 
@@ -121,7 +157,7 @@ const Profile: React.FC = () => {
                             <button className='p-4' type='button' onClick={onLogout}>Logout</button>
 
                             <Link
-                                to={`/stages/${slugName}/${subSlugName}`}
+                                to={`/profile/stages/${slugName}/${subSlugName}`}
                                 state={{
                                     subStageName: subStageName,
                                     stageName: stageName,

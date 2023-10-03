@@ -2,10 +2,7 @@ import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  useGetQuestionsQuery,
-  useGetStageQuery,
-} from "../../../services/stage";
+import GetStage from "../../../services/GetStage";
 import LinkButton from "../../LinkButton";
 import { updateStageForm } from "../../../state/stages/stageFormSlice";
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
@@ -39,6 +36,7 @@ const EducationQuestionsForm = ({
   subStageSlug,
   stageIndex,
 }: GeneralQuestionsFormProps) => {
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
 
   const nav = useNavigate();
@@ -103,10 +101,10 @@ const EducationQuestionsForm = ({
       );
       if (tehsil === "Orta təhsil") {
         state.subStageName === "Olimpiada sualları"
-          ? nav(`/stages/${slugName}/${prevSubSlugName}`, {
+          ? nav(`/profile/stages/${slugName}/${prevSubSlugName}`, {
               state: { subStageName: prevSubStageName, stageName: stageName },
             })
-          : nav(`/stages/${slugName}/${subSlugName}`, {
+          : nav(`/profile/stages/${slugName}/${subSlugName}`, {
               state: { subStageName: subStageName, stageName: stageName },
             });
       }

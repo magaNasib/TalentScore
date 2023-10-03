@@ -12,6 +12,7 @@ export default function useLogout() {
             setAccessToken(null)
             setCSRFToken(null)
             setUser({})
+            localStorage.removeItem('access_token')
 
         } catch (error) {
             console.log(error)

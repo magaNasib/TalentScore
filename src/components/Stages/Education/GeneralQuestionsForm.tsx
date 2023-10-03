@@ -3,10 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import ClockLoader from "react-spinners/ClockLoader";
 import * as yup from "yup";
-import {
-  useGetQuestionsQuery,
-  useGetStageQuery,
-} from "../../../services/stage";
+import GetStage from "../../../services/GetStage";
 import { updateStageForm } from "../../../state/stages/stageFormSlice";
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
 import { addSelect, addTehsil } from "state/dataSlice";
@@ -14,7 +11,7 @@ import { addSelect, addTehsil } from "state/dataSlice";
 import Select from "../../Select";
 import LinkButton from "../../LinkButton";
 import ButtonSave from "components/ButtonSave";
-
+const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
 const schema = yup
   .object({
     curOccupation: yup

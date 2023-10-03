@@ -1,8 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import { stageApi } from "../services/stage";
+import GetStage from "../services/GetStage";
 import stageFormReducer from "./stages/stageFormSlice";
 import reportReducer from "./report/reportSlice";
 import dataReducer from './dataSlice'
+
+const {stageApi } = GetStage()
 export const store = configureStore({
   reducer: {
     [stageApi.reducerPath]: stageApi.reducer,

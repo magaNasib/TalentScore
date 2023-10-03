@@ -1,9 +1,6 @@
 import { useEffect } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import {
-  useGetQuestionsQuery,
-  useGetStageQuery,
-} from "../../../services/stage";
+import GetStage from "../../../services/GetStage";
 import Select from "../../Select";
 import LinkButton from "../../LinkButton";
 import { updateStageForm } from "../../../state/stages/stageFormSlice";
@@ -61,6 +58,7 @@ const OlympiadQuestionsForm = ({
   stageIndex,
   subStageSlug,
 }: GeneralQuestionsFormProps) => {
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
 
   const {

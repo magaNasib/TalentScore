@@ -5,10 +5,7 @@ import { useState } from "react";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import {
-  useGetQuestionsQuery,
-  useGetStageQuery,
-} from "../../../services/stage";
+import GetStage from "../../../services/GetStage";
 import { updateStageForm } from "../../../state/stages/stageFormSlice";
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
 import { GeneralQuestionsFormProps } from "../Education/GeneralQuestionsForm";
@@ -37,7 +34,11 @@ const SpecialSkillsCertifcateQuestionsForm = ({
   stageIndex,
   subStageSlug,
 }: GeneralQuestionsFormProps) => {
+
+  
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
+
 
   const { stage_children } = stagesData?.[stageIndex] || {};
 

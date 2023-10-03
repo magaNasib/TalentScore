@@ -7,11 +7,13 @@ import axios from 'axios'
 import NavBar from 'pages/Landing/components/NavBar'
 import { store } from 'state/store'
 import axiosInstance, { axiosPrivateInstance } from 'axioss'
-
+import { getAge } from './../../../../helper/date'
 function App() {
 
   const currentState = store.getState();
+  
 
+    // const axiosPrivateInstance = useAxiosPrivate()
 
   const USERS = [
     {
@@ -515,6 +517,7 @@ function App() {
 
   ]
   const [data, setData] = useState()
+
 
   useEffect(() => {
 

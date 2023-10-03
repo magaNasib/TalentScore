@@ -9,7 +9,7 @@ import { ReactComponent as StageSkills } from "../assets/skills.svg";
 import { ReactComponent as StageSport } from "../assets/sport.svg";
 import { ReactComponent as StageProg } from "../assets/programmer.svg";
 import { ReactComponent as StageExperience } from "../assets/programmerBoy.svg";
-import { useSelector } from "react-redux";
+import { useSelector } from "react-redux";  
 import Stage from "components/Stage";
 import PopUp from "components/PopUp";
 import NavBar from "./Landing/components/NavBar";

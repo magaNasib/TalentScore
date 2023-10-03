@@ -4,10 +4,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSelector } from "react-redux";
 
-import {
-  useGetQuestionsQuery,
-  useGetStageQuery,
-} from "../../../services/stage";
+import GetStage from "../../../services/GetStage";
 import { useAppDispatch, useAppSelector } from "../../../state/hooks";
 import { addErrorsLength, addPop, addRemove, addSelect } from "state/dataSlice";
 import { updateStageForm } from "../../../state/stages/stageFormSlice";
@@ -56,6 +53,8 @@ const JobExperienceForm = ({
   stageIndex,
   subStageSlug,
 }: GeneralQuestionsFormProps) => {
+  
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
 
   const { stage_children } = stagesData?.[stageIndex] || {};

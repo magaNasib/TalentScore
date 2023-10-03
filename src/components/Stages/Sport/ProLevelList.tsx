@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useGetQuestionsQuery, useGetStageQuery } from "services/stage";
+import GetStage from "services/GetStage";
 import { useAppDispatch, useAppSelector } from "state/hooks";
 import { updateStageForm } from "state/stages/stageFormSlice";
 import { SportFormValues } from "./SportQuestionsForm";
@@ -39,6 +39,8 @@ const ProLevelList = ({
   stageIndex,
   subStageSlug,
 }: GeneralQuestionsFormProps) => {
+  
+  const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
   const errLengt = useSelector((state: RootState) => state.dataa.errorsLength);
   const { stage_children } = stagesData?.[stageIndex] || {};
