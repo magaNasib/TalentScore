@@ -49,32 +49,30 @@ const Profile: React.FC = () => {
         certificate: certificate
 
     })
-    
+
 
     const { user, setUser } = useAuth()
 
-    
+
 
     useEffect(() => {
         async function getUser() {
             const { data } = await axiosPrivateInstance.get('user/user/')
-            
+
             setUser(data)
-        console.log(data);
             // if (!data?.first_name) {
             //     navigate('/login')
             // }
         }
 
         getUser()
-        
+
     }, [])
     useEffect(() => {
         async function getFiles() {
             const resp = await axiosPrivateInstance.get('user/user-accounts-files/')
 
-            console.log(resp);
-            
+
             resp?.data && await setFiles({
                 report: resp.data.find((file: any) => (file.file_category == 'REPORT'))?.file || report,
                 cv1: resp.data.find((file: any) => (file.file_category == 'CV'))?.file || cv1,
@@ -88,10 +86,20 @@ const Profile: React.FC = () => {
 
         getFiles()
     }, [files.report, files.career, files.certificate])
+    const { data } = useGetStageQuery();
+
+    const {
+        slug: slugName,
+        stage_name: stageName,
+        stage_children,
+    } = data?.[0] || {};
+
+    const { slug: subSlugName, stage_name: subStageName } =
+        stage_children?.[0] || {};
     // const { user } = useAuth()
     // const [isLogin, setIsLogin] = useState(false);
     const profileData: DataItem[] = [
-        { type: 'Report', url: files.report, path: '/report' },
+        { type: 'Report', url: files.report, path: user?.report_test ? '/report' : `/` },
         { type: 'CV', url: files.cv1, path: '/cv' },
         { type: 'Career planning', url: files.career, path: '/report' },
         { type: 'CV', url: files.cv2, path: '/report' },
@@ -127,16 +135,7 @@ const Profile: React.FC = () => {
 
 
 
-    const { data } = useGetStageQuery();
 
-    const {
-        slug: slugName,
-        stage_name: stageName,
-        stage_children,
-    } = data?.[0] || {};
-
-    const { slug: subSlugName, stage_name: subStageName } =
-        stage_children?.[0] || {};
 
     return (
         <>
