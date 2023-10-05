@@ -1,5 +1,10 @@
 import { Fragment, useCallback, useEffect, useState } from "react";
-import { IAnswer } from "../types";
+import {
+  IAnswer,
+  IQuestionQuestion,
+  ISelectedValue,
+  SelectedValue,
+} from "../types";
 import { Listbox } from "@headlessui/react";
 import { Icon } from "@iconify/react";
 import { useSelector } from "react-redux";
@@ -9,7 +14,8 @@ interface ISelectMult {
   options?: IAnswer[];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   register?: any;
-  value?: string[];
+  // value?: string[];
+  value?: SelectedValue[];
   errors?: any;
   trigger?: any;
 }
@@ -27,31 +33,51 @@ const SelectMult = ({
   errors,
   trigger,
 }: ISelectMult) => {
-  const [selected, setSelected] = useState(value);
+  // const [selected, setSelected] = useState(value);
+  // const [selected, setSelected] = useState(value?.[0]);
+  // const [selected, setSelected] = useState<SelectedValue[]>(value || []);
+  const [selected, setSelected] = useState<SelectedValue[]>([]); // Updated version
+
   const selectValid = useSelector(
     (state: RootState) => state.dataa.validationSelect
   );
+
   useEffect(() => {
-    setSelected(value);
-  }, [value]);
+    setSelected(value || []);
+  }, []);
 
   return (
     <Listbox
       multiple
       as="div"
-      placeholder={"Rus Dili"}
+      // placeholder={"Rus Dili"}
+      placeholder={placeholder}
       // onBlur={handleErrors}
       value={selected}
       className="flex flex-col gap-2"
-      onChange={(value) => {
-        setSelected(value);
-        register.onChange({
-          target: {
-            name: register.name,
-            value: value,
-          },
-        });
-      }}
+      onChange={
+        // Updated version 26.09.2023
+        (value : SelectedValue[]) => {
+          setSelected(value);
+          register.onChange({
+              target: {
+                name: register.name,
+                value : value,
+              },
+            });
+        }
+        // (value : SelectedValue[]) => { // selected options
+        // console.log('Selected Value:', value); // Check if onChange is
+        // setSelected(value);
+        // register.onChange({
+        //   target: {
+        //     name: register.name,
+        //     // value : value.answer?.map((item)=> item),
+        //     value : value,
+        //   },
+        // });
+        // }
+      }
     >
       <Listbox.Label>{label}</Listbox.Label>
       <div className="w-full relative">
@@ -67,9 +93,11 @@ const SelectMult = ({
               <span
                 className={`w-96 overflow-hidden whitespace-nowrap flex ${
                   value.length > 0 ? "text-qss-inputText" : "text-qss-base-300"
+                  // value ? "text-qss-inputText" : "text-qss-base-300"
                 }`}
               >
-                {value[value.length - 1] || placeholder}
+                {console.log("value-open", value, open)}
+                {value?.[value?.length - 1]?.answer_title || placeholder}
               </span>
               <span className={`absolute right-6 ${open && "rotate-180"}`}>
                 <Icon
@@ -82,18 +110,18 @@ const SelectMult = ({
           )}
         </Listbox.Button>
         <Listbox.Options className="absolute z-10 top-10 bg-qss-input ml-4 rounded w-full max-w-[245px] text-qss-inputText text-sm">
-          {options?.map(({ id, answer_title }) => (
+          {options?.map((option) => (
             <Listbox.Option
-              key={id}
+              key={option.id}
               className="px-4 py-2.5 flex items-center justify-between group hover:bg-qss-base-400 cursor-pointer hover:text-qss-secondary hover:font-medium"
-              value={answer_title}
+              value={option}
             >
               {({ selected }) => (
                 <>
                   <span
                     className={selected ? "text-qss-secondary font-medium" : ""}
                   >
-                    {answer_title}
+                    {option.answer_title}
                   </span>
                   <span
                     className={`${

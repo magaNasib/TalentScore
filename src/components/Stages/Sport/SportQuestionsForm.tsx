@@ -10,7 +10,7 @@ import { Icon } from "@iconify/react";
 import SelectMult from "../../SelectMult";
 import * as yup from "yup";
 import ClockLoader from "react-spinners/ClockLoader";
-import { ISelectedValue } from "types";
+import { IAnswer, ISelectedValue } from "types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { addErrorsLength, addSelect } from "state/dataSlice";
 import { useSelector } from "react-redux";
@@ -52,7 +52,6 @@ interface RootState {
 }
 
 const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
-  
   const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
   const errLengt = useSelector((state: RootState) => state.dataa.errorsLength);
@@ -93,10 +92,10 @@ const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
   const nav = useNavigate();
 
   const [dynamicFields, setDynamicFields] = useState<DynamicFields>({});
-  const addDynamicField = (fieldName: string) => {
+  const addDynamicField = (fieldName: IAnswer) => {
     setDynamicFields((prevDynamicFields) => ({
       ...prevDynamicFields,
-      [fieldName]: {
+      [fieldName.answer_title]: {
         schema: yup
           .object()
           .shape({
@@ -108,10 +107,10 @@ const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
     }));
   };
 
-  const removeDynamicField = (fieldName: string) => {
+  const removeDynamicField = (fieldName: IAnswer) => {
     setDynamicFields((prevDynamicFields) => {
       const updatedFields = { ...prevDynamicFields };
-      delete updatedFields[fieldName];
+      delete updatedFields[fieldName.answer_title];
       return updatedFields;
     });
   };
@@ -210,12 +209,12 @@ const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
       watch("whichSport")?.length === 0 &&
       watch("haveSport.answer") === "Var"
     ) {
-      setValue("haveSport", { answer: "", weight: null });
+      setValue("haveSport", { answer: "", answer_weight: null });
     }
 
     if (formData?.whichSport?.length > 0) {
       setDynamicFields({});
-      formData?.whichSport.map((item: string) => addDynamicField(item));
+      formData?.whichSport.map((item: IAnswer) => addDynamicField(item));
     }
   }, [formData?.whichSport?.length]);
 
@@ -234,12 +233,12 @@ const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
     { register: register("whichSport") },
   ];
 
-  console.log("err", errors);
+  // console.log("err", errors);
 
-  const handleRemove = async (item: string) => {
+  const handleRemove = async (item:IAnswer) => {
     setValue(
       "whichSport",
-      formData?.whichSport?.filter((el: string) => el !== item)
+      formData?.whichSport?.filter((el: string) => el !== item.answer_title)
     );
 
     setValue(`${item}`, undefined);
@@ -249,13 +248,13 @@ const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
   const fillSports = () => {
     if (formData?.whichSport?.length > 0) {
       const updatedFormData: any = { ...formData };
-      const updatedSports = formData.whichSport.map((item: string) => {
+      const updatedSports = formData.whichSport.map((item: IAnswer) => {
         if (
-          formData[item]?.answer === "Peşəkar" ||
-          formData[item]?.answer === "Həvəskar"
+          formData[item.answer_title]?.answer === "Peşəkar" ||
+          formData[item.answer_title]?.answer === "Həvəskar"
         ) {
-          delete updatedFormData[item];
-          return { name: item, value: formData[item] };
+          delete updatedFormData[item.answer_title];
+          return { name: item.answer_title, value: formData[item.answer_title] };
         }
       });
 
@@ -269,7 +268,7 @@ const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
     }
   };
 
-  console.log("formdata", formData);
+  // console.log("formdata", formData);
 
   return (
     <form
@@ -303,13 +302,13 @@ const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
             <label>{questions?.[2]?.question_title}</label>
           )}
 
-          {formData?.whichSport?.map((item: string, index: number) => {
-            const SportErr = errors[item] ? errors[item] : "";
+          {formData?.whichSport?.map((item: IAnswer, index: number) => {
+            const SportErr = errors[item.answer_title] ? errors[item.answer_title] : "";
 
             return (
               <div className="p-2.5 relative flex gap-4 " key={index}>
                 <span className="bg-qss-input cursor-pointer relative py-2 max-w-[142px] w-full justify-center items-center flex rounded-full px-4 gap-2">
-                  <span>{item}</span>
+                  <span>{item.answer_title}</span>
                   <Icon
                     icon="typcn:delete-outline"
                     className="cursor-pointer text-2xl text-[#EE4A4A]/75 hover:text-[#EE4A4A]"
@@ -318,8 +317,8 @@ const SportForm = ({ stageIndex, subStageSlug }: GeneralQuestionsFormProps) => {
                 </span>
                 <Radio
                   options={questions?.[2]?.answers}
-                  value={watch(item)}
-                  register={register(item)}
+                  value={watch(item.answer_title)}
+                  register={register(item.answer_title)}
                   errors={SportErr}
                   trigger={trigger}
                 />

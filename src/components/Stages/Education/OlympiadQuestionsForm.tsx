@@ -111,12 +111,12 @@ const OlympiadQuestionsForm = ({
     },
   });
 
-  const onSubmit: SubmitHandler<OlympiadQuestionsFormValues> = (data) =>
-    console.log(data);
+  const onSubmit: SubmitHandler<OlympiadQuestionsFormValues> = (data) => {}
+    // console.log(data);
 
   useEffect(() => {
     const subscription = watch((value) => {
-      console.log(value);
+      // console.log(value);
       trigger();
       dispatch(
         updateStageForm({
@@ -155,7 +155,7 @@ const OlympiadQuestionsForm = ({
     { register: register("rankOlympiad") },
   ];
 
-  console.log("formdata", formData);
+  // console.log("formdata", formData);
 
   return (
     <form

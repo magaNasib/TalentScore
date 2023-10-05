@@ -10,32 +10,33 @@ import { useAppDispatch, useAppSelector } from "../../../state/hooks";
 import { GeneralQuestionsFormProps } from "../Education/GeneralQuestionsForm";
 import { setShowReport } from "../../../state/report/reportSlice";
 import SelectMult from "components/SelectMult";
-import { ISelectedValue } from "types";
+import {IAnswer, ISelectedValue } from "types";
 import ClockLoader from "react-spinners/ClockLoader";
 import { addErrorsLength, addSelect } from "state/dataSlice";
 import { Link, useNavigate } from "react-router-dom";
 
 export type ProgramSkillsValues =
   | {
-    haveProgramSkills: { answer: string; answer_weight: string };
-    whichProgram: string[];
-    programSkills: any;
-    [key: string]: string | any;
-  }
-  | Partial<Record<string, ISelectedValue | any>>;
+      haveProgramSkills: { answer: string; answer_weight: string };
+      whichProgram: any[];
+      programSkills: any;
+      [key: string]: string | any;
+    }
+  | Partial<Record<string, IAnswer | any>>;
 
-const schema = yup.object().shape({
-  haveProgramSkills: yup
-    .object({
-      answer: yup.string().required(),
-      answer_weight: yup.string().optional().nullable(),
-    })
-    .required(),
-  whichProgram: yup.array().when("haveProgramSkills", {
-    is: (haveProgramSkills: any) => haveProgramSkills.answer !== "Yoxdur",
-    then: () => yup.array().min(1).required(),
-  }),
-});
+  const schema = yup.object().shape({
+    haveProgramSkills: yup
+      .object({
+        answer: yup.string().required(),
+        answer_weight: yup.string().optional().nullable(),
+      })
+      .required(),
+    whichProgram: yup.array().when("haveProgramSkills", {
+      is: (haveProgramSkills: any) => haveProgramSkills.answer !== "Yoxdur",
+      then: () => yup.array().min(1).required(),
+    }),
+  });
+  
 
 interface DynamicFieldSelect {
   [fieldName: string]: string[];
@@ -87,6 +88,8 @@ const ProgramSkills = ({
   const dispatch = useAppDispatch();
   const questions = questionsData?.[0]?.questions;
 
+  //  console.log( questions?.[2]?.answers.slice(0, 3))
+
   const [dynamicFieldsSelect, setDynamicFieldsSelect] = useState<
     DynamicFieldSelect[]
   >([]);
@@ -94,24 +97,26 @@ const ProgramSkills = ({
   const [dynamicFieldsSelectItem, setDynamicFieldsSelectItem] =
     useState<DynamicFieldsSelectItem>({});
 
-  const addDynamicFieldSelect = (fieldName: string) => {
+// Changed type from string to ISelectedValue for validation.
+  const addDynamicFieldSelect = (fieldName: IAnswer) => {
     setDynamicFieldsSelect((prevDynamicFields) => ({
       ...prevDynamicFields,
-      [fieldName]: [],
+      [fieldName.answer_title]: [],
     }));
   };
 
-  const addDynamicFieldSelectItem = (fieldName: string) => {
+// Changed type from string to ISelectedValue for validation.
+  const addDynamicFieldSelectItem = (fieldName: IAnswer) => {
     setDynamicFieldsSelectItem((prev) => ({
       ...prev,
-      [fieldName]: {
+      [fieldName.answer_title]: {
         schema: yup
           .object()
           .shape({
             answer: yup.string().required(),
             answer_weight: yup.string().optional().nullable(),
           })
-          .required(`${fieldName} is required`),
+          .required(`${fieldName.answer_title} is required`),
       },
     }));
   };
@@ -124,7 +129,7 @@ const ProgramSkills = ({
     });
   };
 
-  const removeDynamicFieldSelectItem = (fieldName: string) => {
+  const removeDynamicFieldSelectItem = (fieldName: string | any) => {
     setDynamicFieldsSelectItem((prevDynamicFields) => {
       const updatedFields = { ...prevDynamicFields };
       delete updatedFields[fieldName];
@@ -156,6 +161,7 @@ const ProgramSkills = ({
       ({ name }) => name === subStageSlug
     ) as { formData: ProgramSkillsValues }) || {};
 
+  // console.log(formData);
   const {
     register,
     handleSubmit,
@@ -178,6 +184,7 @@ const ProgramSkills = ({
   const onSubmit: SubmitHandler<ProgramSkillsValues | any> = (data) => {
     dispatch(setShowReport(!showReport));
     fillSkills();
+    reset(formData);
   };
 
   useEffect(() => {
@@ -218,16 +225,18 @@ const ProgramSkills = ({
     }
     setDynamicFieldsSelect([]);
     if (formData?.whichProgram?.length > 0) {
-      formData?.whichProgram.map((item: string) => {
+      // Changed type from string to IAnswer
+      formData?.whichProgram.map((item: IAnswer) => {
         addDynamicFieldSelect(item);
       });
     }
   }, [formData?.whichProgram?.length]);
 
-  const validateAndAddDynamicFields = (fieldName: string) => {
+  // Changed type from string to IAnswer
+  const validateAndAddDynamicFields = (fieldName: IAnswer) => {
     setDynamicFieldsSelectItem({});
-    if (formData?.[fieldName]?.length > 0) {
-      formData[fieldName].forEach((item: string) => {
+    if (formData?.[fieldName.answer_title]?.length > 0) {
+      formData[fieldName.answer_title].forEach((item: IAnswer) => {
         addDynamicFieldSelectItem(item);
       });
     }
@@ -238,7 +247,7 @@ const ProgramSkills = ({
   );
 
   useEffect(() => {
-    formData?.whichProgram.forEach((fieldName: string) => {
+    formData?.whichProgram.forEach((fieldName: IAnswer) => {
       validateAndAddDynamicFields(fieldName);
     });
   }, useEffectDependences);
@@ -256,19 +265,30 @@ const ProgramSkills = ({
     { register: register("haveProgramSkills") },
   ];
 
+  console.log("which", formData?.whichProgram);
+
   const fillSkills = async () => {
     if (formData?.whichProgram?.length > 0) {
       const updatedFormData = { ...formData };
       const updatedSkills = await formData.whichProgram
-        .filter((fieldName: string) => formData[fieldName]?.length > 0)
-        .map((fieldName: string) => {
-          const skillLevels = formData[fieldName].map((item: string) => {
-            delete updatedFormData[item];
-            removeDynamicFieldSelectItem(item);
-            return { name: item, value: formData[item] };
-          });
-          delete updatedFormData[fieldName];
-          removeDynamicFieldSelect(fieldName);
+        .filter((field: IAnswer) => formData[field.answer_title]?.length > 0)
+        .map((fieldName: IAnswer) => {
+          // console.log('fieldname', formData['MS Office'])
+          const skillLevels = formData[fieldName.answer_title].map(
+            ({ answer_title, answer_weight }: IAnswer) => {
+              console.log("answer", answer_title);
+              delete updatedFormData[answer_title];
+              removeDynamicFieldSelectItem(answer_title);
+              // Updated
+              return {
+                name: answer_title,
+                answer_weight: answer_weight,
+                value: formData[answer_title],
+              };
+            }
+          );
+          delete updatedFormData[fieldName.answer_title];
+          removeDynamicFieldSelect(fieldName.answer_title);
           return { whichProgram: fieldName, whichLevel: skillLevels };
         });
 
@@ -276,16 +296,15 @@ const ProgramSkills = ({
 
       reset({
         haveProgramSkills: { answer: "Var", answer_weight: null },
-        whichProgram: formData?.whichProgram || [],
+        whichProgram: [],
         programSkills: updatedSkills,
       });
 
-      nav("/");
+      nav("/profile/report"); // after submitting form that will forward user to home page
     }
   };
-
-  console.log("errors", errors);
-  console.log(formData);
+  // console.log("errors", errors);
+  // console.log('formdata',formData);
 
   return (
     <form
@@ -317,112 +336,141 @@ const ProgramSkills = ({
             </div>
           </div>
         </div>
+        {/* formData?.whichProgram?.includes("MS Office") */}
         {formData?.whichProgram?.length > 0 ? (
           <div className="overflow-y-auto h-[350px] pb-4 space-y-4 pr-5">
-            {formData?.whichProgram?.includes("MS Office") && (
-              <>
-                <SelectMult
-                  label={`${questions?.[2]?.question_title}*`}
-                  options={questions?.[2]?.answers.slice(0, 3)}
-                  placeholder="Select Programs"
-                  register={register("MS Office")}
-                  value={formData?.["MS Office"]}
-                  trigger={trigger}
-                  errors={errors?.["MS Office"]}
-                />
-                {formData?.["MS Office"]?.length > 0 &&
-                  formData?.["MS Office"]?.map((lang: any, index: any) => {
-                    const checkError = errors[lang] ? errors[lang] : "";
-
-                    return (
-                      <div key={index} className="space-y-2">
-                        <label className="pl-2">
-                          {lang + " " + questions?.[3]?.question_title}*
-                        </label>
-                        <div className="flex gap-5">
-                          <Radio
-                            options={questions?.[3]?.answers}
-                            value={watch(lang)}
-                            register={register(lang)}
-                            trigger={trigger}
-                            errors={checkError}
-                          />
-                        </div>
-                      </div>
-                    );
-                  })}
-              </>
-            )}
-            {formData?.whichProgram?.includes("Proqramlaşdırma dilləri") && (
-              <>
-                <SelectMult
-                  label={`${questions?.[4]?.question_title}*`}
-                  options={questions?.[4]?.answers.slice(0, 3)}
-                  register={register("Proqramlaşdırma dilləri")}
-                  value={formData?.["Proqramlaşdırma dilləri"]}
-                  trigger={trigger}
-                  placeholder="Select Programs"
-                  errors={errors?.["Proqramlaşdırma dilləri"]}
-                />
-                {formData?.["Proqramlaşdırma dilləri"]?.length > 0 &&
-                  formData?.["Proqramlaşdırma dilləri"]?.map(
-                    (lang: any, index: any) => {
-                      const checkError = errors[lang] ? errors[lang] : "";
-                      return (
-                        <div key={index} className="space-y-2">
-                          <label className="pl-2">
-                            {lang + " " + questions?.[5]?.question_title}*
-                          </label>
-                          <div className="flex gap-1">
-                            <Radio
-                              options={questions?.[5]?.answers}
-                              value={watch(lang)}
-                              register={register(lang)}
-                              trigger={trigger}
-                              errors={checkError}
-                            />
-                          </div>
-                        </div>
-                      );
-                    }
-                  )}
-              </>
-            )}
-            {formData?.whichProgram?.includes("Dizayn Proqramları") && (
-              <>
-                <SelectMult
-                  label={`${questions?.[6]?.question_title}*`}
-                  options={questions?.[6]?.answers.slice(0, 3)}
-                  register={register("Dizayn Proqramları")}
-                  value={formData?.["Dizayn Proqramları"]}
-                  trigger={trigger}
-                  placeholder="Select Programs"
-                  errors={errors?.["Dizayn Proqramları"]}
-                />
-                {formData?.["Dizayn Proqramları"]?.length > 0 &&
-                  formData?.["Dizayn Proqramları"]?.map(
-                    (lang: any, index: any) => {
-                      const checkError = errors[lang] ? errors[lang] : "";
-                      return (
-                        <div key={index} className="space-y-2">
-                          <label className="pl-2">
-                            {lang + " " + questions?.[7]?.question_title}*
-                          </label>
-                          <div className="flex gap-1">
-                            <Radio
-                              options={questions?.[7]?.answers}
-                              value={watch(lang)}
-                              register={register(lang)}
-                              trigger={trigger}
-                              errors={checkError}
-                            />
-                          </div>
-                        </div>
-                      );
-                    }
-                  )}
-              </>
-            )}
+            {formData?.whichProgram?.map((item: IAnswer) => {
+              console.log('progskills',item)
+              // console.log(formData)
+              {
+                // after debugging add .answer to
+                if (item?.answer_title == "MS Office") {
+                  return (
+                    <>
+                      <SelectMult
+                        label={`${questions?.[2]?.question_title}*`}
+                        options={questions?.[2]?.answers.slice(0, 3)}
+                        placeholder="Select Programs"
+                        register={register("MS Office")}
+                        value={formData?.["MS Office"]}
+                        trigger={trigger}
+                        errors={errors?.["MS Office"]}
+                      />
+                      {formData?.["MS Office"]?.length > 0 &&
+                        formData?.["MS Office"]?.map(
+                          (lang: any, index: any) => {
+                            const checkError = errors[lang.answer_title]
+                              ? errors[lang.answer_title]
+                              : "";
+                            console.log("lang", lang);
+                            return (
+                              <div key={index} className="space-y-2">
+                                <label className="pl-2">
+                                  {lang.answer_title +
+                                    " " +
+                                    questions?.[3]?.question_title}
+                                  *
+                                </label>
+                                <div className="flex gap-5">
+                                  <Radio
+                                    options={questions?.[3]?.answers}
+                                    value={watch(lang.answer_title) || lang}
+                                    register={register(lang.answer_title)}
+                                    trigger={trigger}
+                                    errors={checkError}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          }
+                        )}
+                    </>
+                  );
+                } else if (item?.answer_title == "Proqramlaşdırma dilləri") {
+                  return (
+                    <>
+                      <SelectMult
+                        label={`${questions?.[4]?.question_title}*`}
+                        options={questions?.[4]?.answers.slice(0, 3)}
+                        register={register("Proqramlaşdırma dilləri")}
+                        value={formData?.["Proqramlaşdırma dilləri"]}
+                        trigger={trigger}
+                        placeholder="Select Programs"
+                        errors={errors?.["Proqramlaşdırma dilləri"]}
+                      />
+                      {formData?.["Proqramlaşdırma dilləri"]?.length > 0 &&
+                        formData?.["Proqramlaşdırma dilləri"]?.map(
+                          (lang: any, index: any) => {
+                            const checkError = errors[lang.answer_title]
+                              ? errors[lang.answer_title]
+                              : "";
+                            return (
+                              <div key={index} className="space-y-2">
+                                <label className="pl-2">
+                                  {lang.answer_title +
+                                    " " +
+                                    questions?.[5]?.question_title}
+                                  *
+                                </label>
+                                <div className="flex gap-1">
+                                  <Radio
+                                    options={questions?.[5]?.answers}
+                                    value={watch(lang.answer_title)}
+                                    register={register(lang.answer_title)}
+                                    trigger={trigger}
+                                    errors={checkError}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          }
+                        )}
+                    </>
+                  );
+                } else if (item?.answer_title == "Dizayn Proqramları") {
+                  return (
+                    <>
+                      <SelectMult
+                        label={`${questions?.[6]?.question_title}*`}
+                        options={questions?.[6]?.answers.slice(0, 3)}
+                        register={register("Dizayn Proqramları")}
+                        value={formData?.["Dizayn Proqramları"]}
+                        trigger={trigger}
+                        placeholder="Select Programs"
+                        errors={errors?.["Dizayn Proqramları"]}
+                      />
+                      {formData?.["Dizayn Proqramları"]?.length > 0 &&
+                        formData?.["Dizayn Proqramları"]?.map(
+                          (lang: any, index: any) => {
+                            const checkError = errors[lang.answer_title]
+                              ? errors[lang.answer_title]
+                              : "";
+                            return (
+                              <div key={index} className="space-y-2">
+                                <label className="pl-2">
+                                  {lang.answer_title +
+                                    " " +
+                                    questions?.[7]?.question_title}
+                                  *
+                                </label>
+                                <div className="flex gap-1">
+                                  <Radio
+                                    options={questions?.[7]?.answers}
+                                    value={watch(lang.answer_title)}
+                                    register={register(lang.answer_title)}
+                                    trigger={trigger}
+                                    errors={checkError}
+                                  />
+                                </div>
+                              </div>
+                            );
+                          }
+                        )}
+                    </>
+                  );
+                }
+              }
+            })}
           </div>
         ) : null}
       </div>
@@ -438,15 +486,15 @@ const ProgramSkills = ({
         className="absolute left-0 -bottom-20"
       />
 
-      <Link to='/profile/report'>
-        <button
-          type={Object.keys(errors).length > 0 ? "button" : "submit"}
-          className={`absolute -bottom-[79px] right-0 w-[180px] flex rounded-full justify-center items-center py-3.5 gap-4 bg-qss-secondary flex-row text-white text-white"}`}
-          onClick={() => {
-            dispatch(addSelect(true));
-          }}
-        >
-          {/* <LinkButton
+      <button
+        type={Object.keys(errors).length > 0 ? "button" : "submit"}
+        className={`absolute -bottom-[79px] right-0 w-[180px] flex rounded-full justify-center items-center py-3.5 gap-4 bg-qss-secondary flex-row text-white text-white"}`}
+        onClick={() => {
+          dispatch(addSelect(true));
+          // console.log("btn-err", errors); //that is used for debugging error message structure
+        }}
+      >
+        {/* <LinkButton
           nav={{
             state: { stageName: nextStageName, subStageName: nextSubStageName },
             path: { slugName: slug, subSlugName: nextSubSlugName },
@@ -455,9 +503,8 @@ const ProgramSkills = ({
           label="Yekunlaşdır"
           className="absolute right-0 -bottom-20"
         /> */}
-          Yekunlaşdır
-        </button>
-      </Link>
+        Yekunlaşdır
+      </button>
     </form>
   );
 };

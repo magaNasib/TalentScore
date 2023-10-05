@@ -25,17 +25,15 @@ interface RootState {
     errorsLength: number;
   };
 }
-
 const schema = yup.object({
   languageSkills: yup.array().min(1).required(),
   haveLanguageSkills: yup
     .object({
       answer: yup.string().required(),
-      answer_weight: yup.string().optional().nullable(),
+      weight: yup.string().optional().nullable(),
     })
     .required(),
 });
-
 export type LanguageQuestionsFormValues = yup.InferType<typeof schema>;
 
 const LanguageQuestionsForm = ({
@@ -94,7 +92,7 @@ const LanguageQuestionsForm = ({
     resolver: yupResolver<LanguageQuestionsFormValues>(schema),
     defaultValues: {
       languageSkills: [],
-      haveLanguageSkills: { answer: "", answer_weight: "" },
+      haveLanguageSkills: { answer: "", weight: "" },
     },
   });
 
@@ -128,7 +126,7 @@ const LanguageQuestionsForm = ({
       (_, index) => index !== idd
     );
     formData?.languageSkills.length === 1 && setIsAdding(true);
-    setValue("haveLanguageSkills", { answer: "", answer_weight: "" });
+    setValue("haveLanguageSkills", { answer: "", weight: "" });
     setValue("languageSkills", filterData);
     dispatch(addRemove(false));
   }
@@ -176,8 +174,8 @@ const LanguageQuestionsForm = ({
     );
   if (questionsError) return <div>Error</div>;
 
-  console.log(errLength);
-  console.log(errors);
+  // console.log(errLength);
+  // console.log(errors);
 
   return (
     <form

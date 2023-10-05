@@ -34,11 +34,9 @@ const SpecialSkillsCertifcateQuestionsForm = ({
   stageIndex,
   subStageSlug,
 }: GeneralQuestionsFormProps) => {
-
   
   const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
-
 
   const { stage_children } = stagesData?.[stageIndex] || {};
 

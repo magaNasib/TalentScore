@@ -57,6 +57,7 @@ const JobExperienceForm = ({
   const { useGetStageQuery, useGetQuestionsQuery } = GetStage()
   const { data: stagesData } = useGetStageQuery();
 
+ 
   const { stage_children } = stagesData?.[stageIndex] || {};
 
   const {
@@ -119,7 +120,9 @@ const JobExperienceForm = ({
     },
   });
 
-  const onSubmit: SubmitHandler<JobExperienceValues> = (data) => {};
+  const onSubmit: SubmitHandler<JobExperienceValues> = (data) => {
+    // console.log(data);
+  };
 
   const { formData } =
     (useAppSelector((state) => state.stageForm)?.find(
@@ -163,6 +166,7 @@ const JobExperienceForm = ({
     setEditingIndex(expIndex);
     setIsEditing({ edit: true, data });
   };
+
 
   if (remove === true) {
     const filterData =
@@ -210,8 +214,8 @@ const JobExperienceForm = ({
     dispatch(addSelect(false));
   }, [watch("haveJobExperience.answer")]);
 
-  console.log(formData);
-  console.log(errors);
+  // console.log(formData);
+  // console.log(errors);
 
   return (
     <form

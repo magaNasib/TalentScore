@@ -7,6 +7,7 @@ interface IRadioProps {
   label?: string;
   register: any;
   value: ISelectedValue;
+  // lang : ISelectedValue | null;
   errors?: any;
   trigger?: any;
 }
@@ -21,6 +22,7 @@ const Radio = ({
   label,
   register,
   value,
+  // lang,
   errors,
   trigger,
 }: IRadioProps) => {
@@ -32,6 +34,9 @@ const Radio = ({
   const handleErrors = async () => {
     trigger();
   };
+
+  console.log(register.name,value)
+  // console.log('radio2',lang)
 
   return (
     <RadioGroup
@@ -62,7 +67,7 @@ const Radio = ({
             <span
               className={`whitespace-nowrap relative flex flex-1 justify-center ${
                 value?.answer === answer_title
-                  ? "text-qss-secondary"
+                ? "text-qss-secondary"
                   : "text-qss-inputText"
               }`}
             >

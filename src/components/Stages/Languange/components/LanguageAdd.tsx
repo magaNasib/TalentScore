@@ -29,14 +29,14 @@ const schema = yup
     language: yup
       .object({
         answer: yup.string().required(),
-        answer_weight: yup.string().optional().nullable(),
+        weight: yup.string().optional().nullable(),
       })
       .required(),
 
     langCert: yup
       .object({
         answer: yup.string().required(),
-        answer_weight: yup.string().optional().nullable(),
+        weight: yup.string().optional().nullable(),
       })
       .when("language", {
         is: (language: any) => language.answer !== "Ingilis dili",
@@ -44,14 +44,14 @@ const schema = yup
           yup
             .object({
               answer: yup.string().required(),
-              answer_weight: yup.string().optional().nullable(),
+              weight: yup.string().optional().nullable(),
             })
             .required(),
         otherwise: () =>
           yup
             .object({
               answer: yup.string().optional(),
-              answer_weight: yup.string().optional().nullable(),
+              weight: yup.string().optional().nullable(),
             })
             .optional(),
       }),
@@ -59,7 +59,7 @@ const schema = yup
     engLangCert: yup
       .object({
         answer: yup.string().required(),
-        answer_weight: yup.string().optional().nullable(),
+        weight: yup.string().optional().nullable(),
       })
       .when("language", {
         is: (language: any) => language.answer === "Ingilis dili",
@@ -67,14 +67,14 @@ const schema = yup
           yup
             .object({
               answer: yup.string().required(),
-              answer_weight: yup.string().optional().nullable(),
+              weight: yup.string().optional().nullable(),
             })
             .required(),
         otherwise: () =>
           yup
             .object({
               answer: yup.string().optional(),
-              answer_weight: yup.string().optional().nullable(),
+              weight: yup.string().optional().nullable(),
             })
             .optional(),
       }),
@@ -96,7 +96,7 @@ const schema = yup
     engCertResult: yup
       .object({
         answer: yup.string().required(),
-        answer_weight: yup.string().optional().nullable(),
+        weight: yup.string().optional().nullable(),
       })
       .when(["language", "engLangCert"], {
         is: (language: any, engLangCert: any) =>
@@ -106,14 +106,14 @@ const schema = yup
           yup
             .object({
               answer: yup.string().required(),
-              answer_weight: yup.string().optional().nullable(),
+              weight: yup.string().optional().nullable(),
             })
             .required(),
         otherwise: () =>
           yup
             .object({
               answer: yup.string().optional(),
-              answer_weight: yup.string().optional().nullable(),
+              weight: yup.string().optional().nullable(),
             })
             .optional(),
       }),
@@ -121,7 +121,7 @@ const schema = yup
     langLevel: yup
       .object({
         answer: yup.string().required(),
-        answer_weight: yup.string().optional().nullable(),
+        weight: yup.string().optional().nullable(),
       })
       .when(["engLangCert", "language"], {
         is: (engLangCert: any, language: any) =>
@@ -133,14 +133,14 @@ const schema = yup
           yup
             .object({
               answer: yup.string().required(),
-              answer_weight: yup.string().optional().nullable(),
+              weight: yup.string().optional().nullable(),
             })
             .required(),
         otherwise: () =>
           yup
             .object({
               answer: yup.string().optional(),
-              answer_weight: yup.string().optional().nullable(),
+              weight: yup.string().optional().nullable(),
             })
             .optional(),
       }),
@@ -198,14 +198,14 @@ const LanguageAdd = ({
     }
   };
 
-  console.log(errors);
+  // console.log(errors);
 
   const handleLangLevel = (engCertResult: string | undefined) => {
     switch (engCertResult) {
       case "4.0":
       case "4.5-5.0":
       case "32-45":
-        setValue("langLevel", { answer: "B1 (İlkin orta)", answer_weight: "" });
+        setValue("langLevel", { answer: "B1 (İlkin orta)", weight: "" });
         break;
       case "5.5":
       case "6.0":
@@ -213,18 +213,18 @@ const LanguageAdd = ({
       case "46-59":
       case "60-78":
       case "70-93":
-        setValue("langLevel", { answer: "B2 (Orta)", answer_weight: "" });
+        setValue("langLevel", { answer: "B2 (Orta)", weight: "" });
         break;
       case "7.0-7.5":
       case "94-109":
-        setValue("langLevel", { answer: "C1 (Üst orta)", answer_weight: "" });
+        setValue("langLevel", { answer: "C1 (Üst orta)", weight: "" });
         break;
       case "8.0-9.0":
       case "110-120":
-        setValue("langLevel", { answer: "C2 (İrəli)", answer_weight: "" });
+        setValue("langLevel", { answer: "C2 (İrəli)", weight: "" });
         break;
       case "31":
-        setValue("langLevel", { answer: "A2 (Elementar)", answer_weight: "" });
+        setValue("langLevel", { answer: "A2 (Elementar)", weight: "" });
         break;
       default:
         break;
@@ -258,7 +258,7 @@ const LanguageAdd = ({
     if (watch().language !== undefined && editData === undefined) {
       parentReset({
         ...formData,
-        haveLanguageSkills: { answer: "Var", answer_weight: "" },
+        haveLanguageSkills: { answer: "Var", weight: "" },
       });
     }
   }, [watch("language")]);
@@ -281,7 +281,7 @@ const LanguageAdd = ({
       watch("engLangCert.answer") === "Öz sertifikatın" ||
       watch("engLangCert.answer") === "Yoxdur"
     ) {
-      setValue("engCertResult", { answer: "", answer_weight: "" });
+      setValue("engCertResult", { answer: "", weight: "" });
     }
 
     if (
@@ -292,8 +292,8 @@ const LanguageAdd = ({
       setValue("langCertResult", undefined);
     }
     if (watch("language.answer") !== "Ingilis dili") {
-      setValue("engLangCert", { answer: "", answer_weight: "" });
-      setValue("engCertResult", { answer: "", answer_weight: "" });
+      setValue("engLangCert", { answer: "", weight: "" });
+      setValue("engCertResult", { answer: "", weight: "" });
     }
     if (watch("langCert.answer") === "Xeyr") {
       setValue("langCertName", "");
