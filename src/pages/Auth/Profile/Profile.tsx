@@ -23,6 +23,7 @@ interface DataItem {
     type: string
     url: string
     path: string
+    state?: any
 }
 interface Files {
     report: string,
@@ -41,6 +42,7 @@ const Profile: React.FC = () => {
     const navigate = useNavigate()
     const logout = useLogout()
     const [loading, setLoading] = useState(false)
+    const { user, setUser } = useAuth()
     const [files, setFiles] = useState<Files>({
         report: report,
         cv1: cv1,
@@ -51,7 +53,6 @@ const Profile: React.FC = () => {
     })
 
 
-    const { user, setUser } = useAuth()
 
 
 
@@ -99,7 +100,12 @@ const Profile: React.FC = () => {
     // const { user } = useAuth()
     // const [isLogin, setIsLogin] = useState(false);
     const profileData: DataItem[] = [
-        { type: 'Report', url: files.report, path: user?.report_test ? '/report' : `/` },
+        {
+            type: 'Report', url: files.report, path: user?.report_test ? '/report' : `/stages/${slugName}/${subSlugName}`, state: {
+                subStageName: subStageName,
+                stageName: stageName,
+            }
+        },
         { type: 'CV', url: files.cv1, path: '/cv' },
         { type: 'Career planning', url: files.career, path: '/report' },
         { type: 'CV', url: files.cv2, path: '/report' },

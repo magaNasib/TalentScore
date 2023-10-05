@@ -178,7 +178,7 @@ const SpecialSkillsForm = ({
     const nextStage = isProExist ? nextStageName : nextStageNameCond;
     const nextSubStage = isProExist ? nextSubStageName : nextSubStageNameCond;
 
-    nav(`/stages/${nextSlug}/${nextSubSlug}`, {
+    nav(`/profile/stages/${nextSlug}/${nextSubSlug}`, {
       state: {
         subStageName: nextSubStage,
         stageName: nextStage,
@@ -359,7 +359,8 @@ const SpecialSkillsForm = ({
       </div>
       {watch("haveSpecialSkills.answer") === "Yoxdur" ? (
         <LinkButton
-          nav={{
+          nav={
+            {
             state: {
               stageName: nextStageNameCond,
               subStageName: nextSubStageNameCond,
