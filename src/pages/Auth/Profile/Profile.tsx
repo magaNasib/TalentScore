@@ -266,7 +266,7 @@ const Profile: React.FC = () => {
                                     stageName: stageName,
                                 }}
                             >
-                                <button className='w-[243px] text-[14px] text-white py-[10px] px-[24px] rounded-[25px] float-right bg-gradient-to-t from-qss-gradientBottom to-qss-gradientTop'>Start Test</button>
+                                <button className='w-[243px] text-[14px] text-white py-[10px] px-[24px] rounded-[25px] float-right bg-gradient-to-t from-qss-gradientBottom to-qss-gradientTop cursor-pointer' type='button'>Start Test</button>
                             </Link>}
                             {
                                 user?.report_test && <p className='w-[243px] text-[14px] text-white py-[10px] px-[24px] rounded-[25px] float-right bg-gradient-to-t from-qss-gradientBottom to-qss-gradientTop'>You passed the test</p>
@@ -276,7 +276,7 @@ const Profile: React.FC = () => {
                 </div>
                 <div className='relative w-full'>
                     <svg
-                        className='absolute top-0'
+                        className='absolute top-0 -z-10'
                         xmlns='http://www.w3.org/2000/svg'
                         width='263'
                         height='876'
@@ -286,7 +286,7 @@ const Profile: React.FC = () => {
                         <path d='M262.169 2.3757C219.124 13.6874 133.351 65.0256 134.622 179.886C136.21 323.461 272.554 389.444 172.068 510.051C71.5822 630.658 -37.2551 611.193 -110.628 598.086C-184.001 584.978 -565.309 450.274 -889.311 620.454C-1148.51 756.598 -1172.08 1137.2 -1224.31 1299.84' stroke='#E4F1F0' strokeWidth='3' strokeDasharray='8 8' />
                     </svg>
                     <svg
-                        className='absolute bottom-0 z-10 right-0'
+                        className='absolute bottom-0 -z-10 right-0'
                         xmlns='http://www.w3.org/2000/svg'
                         width='1440'
                         height='648'
@@ -297,7 +297,7 @@ const Profile: React.FC = () => {
                     </svg>
                     <div className='w-[1090px] m-auto flex flex-col z-50 relative'>
                         <p className='text-center text-qss-secondary mt-11 mb-8'>Explore sample reports below!</p>
-                        <Document data={files} />
+                        <Document fileData={files} />
                         <button className='flex justify-between items-center w-[250px] m-auto border-[1px] border-qss-secondary bg-qss-secondary rounded-[25px] text-white text-[14px] py-3 px-4 mb-8 mt-12'>Go to premium subscription
                             <svg
                                 xmlns='http://www.w3.org/2000/svg'
