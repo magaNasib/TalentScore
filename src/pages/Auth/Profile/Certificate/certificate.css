@@ -1,0 +1,149 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&family=Karla:wght@400;800&family=Montserrat:wght@300;400;500;600;700&display=swap');
+
+#certificate {
+    display: flex;
+    height: 100vh;
+    justify-content: center;
+    align-items: center;
+    background-color: #1a1919;
+}
+
+.certificate {
+    width: 842px;
+    height: 595px;
+    padding: 16px;
+    background-color: #fff;
+}
+
+.certificate-inner {
+    width: 100%;
+    height: 100%;
+    padding: 16px 16px 25px 16px;
+    border: 1px solid #000;
+}
+
+.certificate-header {
+    overflow: hidden;
+    width: 100%;
+    height: 146px;
+    background: linear-gradient(90deg, #279F74 0%, #D8E026 100%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.certificate-header > img {
+    width: 306px;
+}
+
+.certificate-header > h1 {
+    color: #fff;
+    font: 300 48px 'Montserrat', sans-serif;
+    line-height: normal;
+    margin-left: 32px;
+}
+
+.certificate-body {
+    width: 100%;
+    position: relative;
+    padding: 30px 26px 0 26px;
+}
+
+.certificate-svg {
+    position: absolute;
+    right: 0;
+    top: 0;
+}
+
+.certificate-svg text {
+    font: 500 14px 'Montserrat', sans-serif;
+    letter-spacing: -0.21px;
+}
+
+.certificate-fullName {
+    color: #1E1E1E;
+    font: 400 32px 'Montserrat', sans-serif;
+    margin-top: 3px;
+}
+
+.certificate-text {
+    color: #000;
+    font: 400 13px 'Inter', sans-serif;
+    margin: 23px 0 24px 0;
+}
+
+.certificate-summary {
+    color: #003F4D;
+    font: 800 16px 'Karla', sans-serif;
+    letter-spacing: -0.32px;
+}
+
+.certificate-summary-text {
+    width: 100%;
+    height: 60px;
+    color: #000;
+    font: 400 12px 'Karla', sans-serif;
+    margin: 12px 0 39px 0;
+}
+
+.certificate-signature {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+}
+
+.certificate-signature-place {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+}
+
+.certificate-signature > div > p {
+    color: #000;
+    font: 500 11px 'Montserrat', sans-serif;
+    letter-spacing: -0.165px;
+}
+
+.certificate-signature-place > p {
+    color: #000000a6;
+    font: 300 11px 'Montserrat', sans-serif;
+    margin: 2px 32px 0 0;
+}
+
+.certificate-signature-place > svg {
+    margin-bottom: 1.5px;
+}
+
+.certificate-signature > img {
+    width: 134px;
+}
+
+.certificate-footer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+}
+
+.certificate-footer > div {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.certificate-footer > p, .certificate-footer > div > p {
+    color: #000000a6;
+}
+
+.certificate-footer > p {
+    text-align: center;
+    margin-bottom: 6px;
+}
+
+.certificate-footer p {
+    font: 400 8px 'Montserrat', sans-serif;
+}
