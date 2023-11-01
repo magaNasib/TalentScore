@@ -13,9 +13,7 @@ export const AuthContext = createContext<AuthContextType>({
 })
 
 export function AuthContextProvider(props:any) {
-    const [user, setUser] = useState({first_name:'',last_name:'',report_test:false,email:'',profile_photo:'',birth_date:''
-    
-    }); 
+    const [user, setUser] = useState({first_name:'',last_name:'',report_test:false,email:'',profile_photo:'',birth_date:''}); 
     const [accessToken, setAccessToken] = useState(null); 
     const [refreshToken, setRefreshToken] = useState(null); 
     const [csrftoken, setCSRFToken] = useState(null); 
