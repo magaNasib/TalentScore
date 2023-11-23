@@ -99,6 +99,7 @@ const Document: React.FC<DocumentProps> = ({ fileData }) => {
                                  <button className='w-full group-hover:bg-qss-secondary group-hover:text-white transition duration-[0.35s] text-xs py-[6.5px] px-[13px] rounded-[15px] cursor-pointer border-[1px] border-qss-secondary text-qss-secondary'>{checkButtonText(elem.file_category)}</button>
                             </Link>}
                             
+                            
                         </div>
                     ))
                 }
